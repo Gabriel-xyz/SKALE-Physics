@@ -1,0 +1,69 @@
+import { Box } from "./shape.js"
+// TODO signs point to static and dynamic bodies needing to be separate classes. too many things will need conditionally checked and be slow. for example you're not even allowed to move static objects by x/y after creation
+export class Body {
+	constructor(config) {
+		this.system = config.system
+		// TODO make active flag actually do something
+		this.active = config.active ?? true // false = accel/vel wont be applied this tick and body is noncollidable
+		this.dynamic = config.dynamic ?? true
+		this.pos = config.pos ?? { x: 0, y: 0 }
+		this.accel = config.accel ?? { x: 0, y: 0 }
+		this.vel = config.vel ?? { x: 0, y: 0 }
+		this.speed = config.speed ?? 0
+		this.maxSpeed = config.maxSpeed ?? Infinity
+		this.angle = config.angle ?? 0 // exists solely for the move() function right now, has nothing to do with rotation
+		this.damping = config.damping ?? 0
+		this.bounce = config.bounce ?? 0
+		this.scale = config.scale ?? { x: 1, y: 1 }
+		this.shape = config.shape ?? new Box(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
+		if (config.scale) {
+			this.shape.refresh(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
+		}
+	}
+	// TODO this is a bad setup. i tested it and when we change x and y at the same time (which is the majority of the time) we get twice the calls to system.insert() than we need to. so either these need to not be setters anymore or calling system.insert() needs handled somewhere else than markShapeChanged()
+	get x() {
+		return this.pos.x;
+	}
+	set x(x) {
+		this.pos.x = x;
+		this.markShapeChanged()
+	}
+	get y() {
+		return this.pos.y;
+	}
+	set y(y) {
+		this.pos.y = y;
+		this.markShapeChanged()
+	}
+	markShapeChanged() {
+		this.shape.refreshShape(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
+		this.system.insert(this)
+		this.shapeChanged = true
+	}
+	move(speed = 1) {
+		const moveX = Math.cos(this.angle) * speed;
+		const moveY = Math.sin(this.angle) * speed;
+		this.translate(moveX, moveY)
+	}
+	setPos(x, y) {
+		this.x = x
+		this.y = y
+		return this
+	}
+	translate(x, y) {
+		this.setPos(this.x + x, this.y + y)
+		return this
+	}
+	setAccel() {
+
+	}
+	setVel() {
+
+	}
+	setScale(x, y) {
+		this.scale.x = x
+		this.scale.y = y
+		this.markShapeChanged()
+		return this
+	}
+}

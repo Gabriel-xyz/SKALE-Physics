@@ -1,0 +1,80 @@
+import { Body } from "./body.js";
+import RBush from "./external/rbush.js";
+import { contains, intersects, separate } from "./intersect.js";
+export class System extends RBush {
+	bodies = []
+	constructor(maxEntries = 9) {
+		super(maxEntries)
+	}
+	update(dt) {
+		// TODO after optimizing my current system, i still need to test it against clearing and rebuilding the rtree every tick and see which is faster
+		// move things according to their velocity
+		// clear rtree?
+		// loop through all bodies whose bb changed
+		// get broadphase potentials
+		// check intersection and do separation
+		// rebuild rtree?
+
+		let body, potentials, body2
+		// console.log('o1', this.bodies[0].x, this.bodies[0].y)
+		// console.log('bodies',this.bodies.length)
+		for (let i = 0; i < this.bodies.length; i++) {
+			body = this.bodies[i]
+			if (!body.shapeChanged || !body.dynamic || !body.active) continue
+			potentials = this.search(body) // TODO how am i supposed to deal with the fact that search() returns bounding boxies not bodies. it doesnt even return shapes it returns actual bounding boxes
+			// console.log('potentials', potentials.length)
+			// console.log(potentials[0])
+			let total = 0
+			for (let i2 = 0; i2 < potentials.length; i2++) {
+				body2 = potentials[i2]
+				if (intersects(body.shape, body2)) {
+					separate(body, body2)
+					total++
+				}
+			}
+			// console.log('total', total)
+			body.shapeChanged = false
+		}
+	}
+	createBody(config) {
+		config.system = this
+		let body = new Body(config)
+		this.insert(body)
+		return body
+	}
+	bodyRemoveCount = 0
+	insert(body) {
+		if (!body.inserted) this.bodies.push(body)
+		let shape = body.shape
+		if (body.inserted) {
+			if(contains(shape.bb,shape)) return shape.bb // no need to remove and reinsert if body has not moved beyond its padded bb
+			super.remove(shape.bb)
+			this.bodyRemoveCount++
+			// console.log('removed', this.bodyRemoveCount)
+		}
+		shape.refreshBB()
+		body.inserted = true
+		return super.insert(shape.bb)
+	}
+	// TODO i need a preexisting array of all shapes for this to work efficiently so i dont have to create an array of all shapes every tick just to use this function
+	load(shapes) {
+		super.load(shapes)
+	}
+	remove(body) {
+		if (body.inserted) {
+			this.bodies.splice(this.bodies.indexOf(body), 1)
+		}
+		body.inserted = false
+		super.remove(body.shape.bb)
+	}
+	search(body) {
+		return super.search(body.shape) // yep you read that right im pretty sure we search against the shape not the shape's bb
+	}
+	// TODO i dont suspect this will be much use but it could be worth testing as a phase BEFORE using search() to see if theres even any reason to search, which may be an optimization depending how much faster collides() is than search()
+	collides(body) {
+		return super.collides(body.shape) // yes, shape, not bb
+	}
+	getPotentials(body) {
+		return filter(this.search(body), candidate => candidate !== body.shape.bb)
+	}
+}
