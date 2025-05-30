@@ -1,7 +1,7 @@
 export function separate(body,body2) {
 	let shape = body.shape
 	let shape2 = body2.shape
-	// if (!body.dynamic || shape.trigger || shape2.trigger) return;
+	if (!body.dynamic || shape.trigger || shape2.trigger) return;
 	// Calculate overlap on each axis
 	const overlapX = Math.min(shape.maxX - shape2.minX, shape2.maxX - shape.minX);
 	const overlapY = Math.min(shape.maxY - shape2.minY, shape2.maxY - shape.minY);
@@ -50,7 +50,6 @@ export function notIntersects(a, b) {
 }
 // TODO make work on circles
 // TODO integrate sameLayer check
-// TODO this function is worthless if i intend to clear and rebuild the tree every tick
 export function contains(a, b) {
 	return !(b.minX < a.minX || b.minY < a.minY || b.maxX > a.maxX || b.maxY > a.maxY)
 }

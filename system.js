@@ -16,25 +16,20 @@ export class System extends RBush {
 		// rebuild rtree?
 
 		let body, potentials, bb
-		// console.log('o1', this.bodies[0].x, this.bodies[0].y)
-		// console.log('bodies',this.bodies.length)
+		// TODO check performance impact of iterating all bodies versus iterating dynamic array and static array separately
 		for (let i = 0; i < this.bodies.length; i++) {
 			body = this.bodies[i]
 			if (!body.shapeChanged || !body.dynamic || !body.active) continue
 			potentials = this.search(body) // TODO how am i supposed to deal with the fact that search() returns bounding boxies not bodies. it doesnt even return shapes it returns actual bounding boxes
-			// console.log('potentials', potentials.length)
-			// console.log(potentials[0])
 			// TODO would that trick where you do while()/pop() make this faster?
-			let total = 0
+			// TODO surprising intersects() and separate() and this entire loop in general have almost no performance impact. comment it out and see
 			for (let i2 = 0; i2 < potentials.length; i2++) {
 				bb = potentials[i2]
 				if(bb.shape.body == body) continue
 				if (intersects(body.shape, bb.shape.body)) {
 					separate(body, bb)
-					total++
 				}
 			}
-			// console.log('total', total)
 			body.shapeChanged = false
 		}
 	}
@@ -52,7 +47,6 @@ export class System extends RBush {
 			if(contains(shape.bb,shape)) return shape.bb // no need to remove and reinsert if body has not moved beyond its padded bb
 			super.remove(shape.bb)
 			this.bodyRemoveCount++
-			// console.log('removed', this.bodyRemoveCount)
 		}
 		shape.refreshBB()
 		body.inserted = true

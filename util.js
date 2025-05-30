@@ -11,7 +11,6 @@ export function rad2deg(radians) {
 export function randomRadian() {
   return Math.random() * Math.PI * 2;
 }
-// TODO i think this should have vector2 as param not body
 export function distance(bodyA, bodyB) {
 	const xDiff = bodyA.x - bodyB.x;
 	const yDiff = bodyA.y - bodyB.y;

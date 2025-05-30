@@ -1,5 +1,7 @@
 switch to typescript
 
+ive now confirmed that dynamics can push other dynamics over statics. need to fix that, some way dynamics need tested for overlaps first then statics
+
 figure out how sleeping works and if we need it
 
 ive now confirmed in the detect-collisions repo that the only difference between statics and dynamics is that separate() will return if the body you called it on is static (because statics dont separate from things), if it doesnt return then separate() will do a tree search to find potentials and then separate from those, meaning statics do avoid the tree search to find potentials but not much else, because statics and dynamics are still both in the same rtree, theyre not even in two separate branches of it, and when System iterates over bodies it has to iterate over both statics and dynamics at once instead of just dynamics or just dynamics that moved this tick, when appropriate

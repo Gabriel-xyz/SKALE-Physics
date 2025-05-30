@@ -9,12 +9,22 @@ canvas.height = 950;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(12);
-for (let i = 0; i < 12000; i++) {
+// TODO bug, something is wrong with static objects. notice how any dynamic objects nearby them cease to move for some reason
+for (let i = 0; i < 600; i++) {
   system.createBody({
     active: true,
-    dynamic: Math.random() < 1,
+    dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 4, y: 4 },
+    scale: { x: 12*Math.random()+6, y: 12*Math.random()+6 },
+    angle: randomRadian()
+  })
+}
+for (let i = 0; i < 400; i++) {
+  system.createBody({
+    active: true,
+    dynamic: true,
+    pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
+    scale: { x: 12, y: 12 },
     angle: randomRadian()
   })
 }
@@ -48,16 +58,20 @@ function render() {
 let previous = performance.now(), times = [], lastLog = 0, dt = 0.016
 function gameLoop() {
   requestAnimationFrame(gameLoop);
-  for (let i = 0; i < Math.min(2000, system.bodies.length); i++) {
+  let count = 0
+  for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    body.move(6 * dt)
+    body.move(24 * dt)
     if (body.x < 0 || body.x > canvas.width) {
       body.x = canvas.width * Math.random()
     }
     if (body.y < 0 || body.y > canvas.height) {
       body.y = canvas.height * Math.random()
     }
+    if (Math.random() < 0.01) body.angle = randomRadian()
+    count++
+    if (count >= 2000) break
   }
   system.update(dt);
   render();
