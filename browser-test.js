@@ -8,13 +8,13 @@ canvas.width = 1700;
 canvas.height = 950;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
-const system = new System(11);
-for (let i = 0; i < 20000; i++) {
+const system = new System(12);
+for (let i = 0; i < 12000; i++) {
   system.createBody({
     active: true,
     dynamic: Math.random() < 1,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 3, y: 3 },
+    scale: { x: 4, y: 4 },
     angle: randomRadian()
   })
 }

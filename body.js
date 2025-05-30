@@ -16,6 +16,7 @@ export class Body {
 		this.bounce = config.bounce ?? 0
 		this.scale = config.scale ?? { x: 1, y: 1 }
 		this.shape = config.shape ?? new Box(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
+		this.shape.body = this
 		if (config.scale) {
 			this.shape.refresh(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
 		}

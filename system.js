@@ -15,7 +15,7 @@ export class System extends RBush {
 		// check intersection and do separation
 		// rebuild rtree?
 
-		let body, potentials, body2
+		let body, potentials, bb
 		// console.log('o1', this.bodies[0].x, this.bodies[0].y)
 		// console.log('bodies',this.bodies.length)
 		for (let i = 0; i < this.bodies.length; i++) {
@@ -24,11 +24,13 @@ export class System extends RBush {
 			potentials = this.search(body) // TODO how am i supposed to deal with the fact that search() returns bounding boxies not bodies. it doesnt even return shapes it returns actual bounding boxes
 			// console.log('potentials', potentials.length)
 			// console.log(potentials[0])
+			// TODO would that trick where you do while()/pop() make this faster?
 			let total = 0
 			for (let i2 = 0; i2 < potentials.length; i2++) {
-				body2 = potentials[i2]
-				if (intersects(body.shape, body2)) {
-					separate(body, body2)
+				bb = potentials[i2]
+				if(bb.shape.body == body) continue
+				if (intersects(body.shape, bb.shape.body)) {
+					separate(body, bb)
 					total++
 				}
 			}

@@ -1,7 +1,7 @@
 import { PADDING } from "./consts.js"
 import { contains } from "./intersect.js";
 class Shape {
-	bb = {}
+	bb = { shape: this }
 	constructor(trigger = false) {
 		this.trigger = trigger
 	}
@@ -9,6 +9,7 @@ class Shape {
 export class Box extends Shape {
 	constructor(x = 0, y = 0, scaleX = 1, scaleY = 1, trigger = false) {
 		super(trigger)
+		this.bb.shape = this // uneccessary?
 		this.refresh(x, y, scaleX, scaleY)
 	}
 	refresh(x = 0, y = 0, scaleX = 1, scaleY = 1) {
@@ -30,6 +31,7 @@ export class Box extends Shape {
 }
 export class Circle extends Shape {
 	constructor(x = 0, y = 0, r = 1, trigger = false) {
+		this.bb.shape = this // uneccessary?
 		this.minX = x
 		this.minY = y
 		this.r = r
