@@ -1,5 +1,7 @@
 switch to typescript
 
+try some other broadphases and see if they outperform rbush for my usecase for example quadtree-ts
+
 ive now confirmed that dynamics can push other dynamics over statics. need to fix that, some way dynamics need tested for overlaps first then statics
 
 figure out how sleeping works and if we need it

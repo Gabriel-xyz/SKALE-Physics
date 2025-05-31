@@ -11,7 +11,7 @@ export default class RBush {
     }
     search(bbox) {
         let node = this.data;
-        const result = []; // TODO i think an optimization would be not to create a new array here but instead have a reusable array and just set its length to 0 here
+        const result = [];
         if (!intersects(bbox, node)) return result;
         const toBBox = this.toBBox;
         const nodesToSearch = [];
@@ -122,10 +122,10 @@ export default class RBush {
         }
         return this;
     }
-    toBBox(item) { return item; } // TODO getting rid of this function might be optimization
-    compareMinX(a, b) { return a.minX - b.minX; } // TODO getting rid of these might be optimization
+    toBBox(item) { return item; }
+    compareMinX(a, b) { return a.minX - b.minX; }
     compareMinY(a, b) { return a.minY - b.minY; }
-    toJSON() { return this.data; } // TODO get rid of just because, might be optimization idk
+    toJSON() { return this.data; }
     fromJSON(data) {
         this.data = data;
         return this;
@@ -314,7 +314,6 @@ export default class RBush {
         }
     }
 }
-// TODO optimization to remove equalsFn if i dont use it ever
 function findItem(item, items, equalsFn) {
     if (!equalsFn) return items.indexOf(item);
     for (let i = 0; i < items.length; i++) {
@@ -348,11 +347,11 @@ function extend(a, b) {
 }
 function compareNodeMinX(a, b) { return a.minX - b.minX; }
 function compareNodeMinY(a, b) { return a.minY - b.minY; }
-function bboxArea(a)   { return (a.maxX - a.minX) * (a.maxY - a.minY); }
+function bboxArea(a) { return (a.maxX - a.minX) * (a.maxY - a.minY); }
 function bboxMargin(a) { return (a.maxX - a.minX) + (a.maxY - a.minY); }
 function enlargedArea(a, b) {
     return (Math.max(b.maxX, a.maxX) - Math.min(b.minX, a.minX)) *
-           (Math.max(b.maxY, a.maxY) - Math.min(b.minY, a.minY));
+        (Math.max(b.maxY, a.maxY) - Math.min(b.minY, a.minY));
 }
 function intersectionArea(a, b) {
     const minX = Math.max(a.minX, b.minX);
@@ -360,19 +359,19 @@ function intersectionArea(a, b) {
     const maxX = Math.min(a.maxX, b.maxX);
     const maxY = Math.min(a.maxY, b.maxY);
     return Math.max(0, maxX - minX) *
-           Math.max(0, maxY - minY);
+        Math.max(0, maxY - minY);
 }
 function contains(a, b) {
     return a.minX <= b.minX &&
-           a.minY <= b.minY &&
-           b.maxX <= a.maxX &&
-           b.maxY <= a.maxY;
+        a.minY <= b.minY &&
+        b.maxX <= a.maxX &&
+        b.maxY <= a.maxY;
 }
 function intersects(a, b) {
     return b.minX <= a.maxX &&
-           b.minY <= a.maxY &&
-           b.maxX >= a.minX &&
-           b.maxY >= a.minY;
+        b.minY <= a.maxY &&
+        b.maxX >= a.minX &&
+        b.maxY >= a.minY;
 }
 function createNode(children) {
     return {

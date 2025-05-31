@@ -31,20 +31,14 @@ export function separate(shape,shape2) {
 			shape.maxY += overlapY;
 		}
 	}
-	// its important not to set body.x/y here so long as those remain setters because they do things that interfere and make it janky so we do it this way to avoid the setters
 	shape.body.pos.x = shape.minX
 	shape.body.pos.y = shape.minY
-	shape.body.markShapeChanged()
 }
 // TODO has to work on circles too by checking if it has a defined .r property
-// TODO has to return a separation data object for separate() to use
+// TODO has to return a separation data object for separate() to use?
 // TODO has to use sameLayer to check if the objects share any layer, if not theyre not intersecting
-export function intersects(shape, shape2) {
-	return !notIntersects(shape, shape2)
-}
-// supposedly using this is faster because || instead of &&. !notIntersects() means they do intersect
-export function notIntersects(shape, shape2) {
-	return shape2.minX > shape.maxX || shape2.minY > shape.maxY || shape2.maxX < shape.minX || shape2.maxY < shape.minY
+export function intersects(box1, box2) {
+    return (box1.maxX >= box2.minX && box1.minX <= box2.maxX) && (box1.maxY >= box2.minY && box1.minY <= box2.maxY);
 }
 // TODO make work on circles
 // TODO integrate sameLayer check

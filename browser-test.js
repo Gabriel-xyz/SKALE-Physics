@@ -10,21 +10,21 @@ document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(12);
 // TODO bug, something is wrong with static objects. notice how any dynamic objects nearby them cease to move for some reason
-for (let i = 0; i < 600; i++) {
+for (let i = 0; i < 200; i++) {
   system.createBody({
     active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 12*Math.random()+6, y: 12*Math.random()+6 },
+    scale: { x: 24, y: 24 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 400; i++) {
+for (let i = 0; i < 200; i++) {
   system.createBody({
     active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 12, y: 12 },
+    scale: { x: 24, y: 24 },
     angle: randomRadian()
   })
 }

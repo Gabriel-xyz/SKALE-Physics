@@ -29,24 +29,18 @@ export class Body {
 	separate(body){
 		return separate(this.shape, body.shape)
 	}
-	// TODO this is a bad setup. i tested it and when we change x and y at the same time (which is the majority of the time) we get twice the calls to system.insert() than we need to. so either these need to not be setters anymore or calling system.insert() needs handled somewhere else than markShapeChanged()
 	get x() {
 		return this.pos.x;
 	}
 	set x(x) {
 		this.pos.x = x;
-		this.markShapeChanged()
+		this.shapeChanged = true
 	}
 	get y() {
 		return this.pos.y;
 	}
 	set y(y) {
 		this.pos.y = y;
-		this.markShapeChanged()
-	}
-	markShapeChanged() {
-		this.shape.refreshShape(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
-		this.system.insert(this)
 		this.shapeChanged = true
 	}
 	move(speed = 1) {
@@ -55,8 +49,9 @@ export class Body {
 		this.translate(moveX, moveY)
 	}
 	setPos(x, y) {
-		this.x = x
-		this.y = y
+		this.pos.x = x
+		this.pos.y = y
+		this.shapeChanged = true
 		return this
 	}
 	translate(x, y) {
@@ -72,7 +67,7 @@ export class Body {
 	setScale(x, y) {
 		this.scale.x = x
 		this.scale.y = y
-		this.markShapeChanged()
+		this.shapeChanged = true
 		return this
 	}
 }
