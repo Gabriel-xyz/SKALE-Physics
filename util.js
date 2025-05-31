@@ -16,6 +16,7 @@ export function distance(bodyA, bodyB) {
 	const yDiff = bodyA.y - bodyB.y;
 	return Math.hypot(xDiff, yDiff);
 }
+// TODO move to intersect.js
 // i dont know the implementation of this, only that we probably need it
 export function getBounceVector(){
 

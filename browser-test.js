@@ -9,22 +9,21 @@ canvas.height = 950;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(12);
-// TODO bug, something is wrong with static objects. notice how any dynamic objects nearby them cease to move for some reason
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 100; i++) {
   system.createBody({
     active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 24, y: 24 },
+    scale: { x: 30, y: 30 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 100; i++) {
   system.createBody({
     active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 24, y: 24 },
+    scale: { x: 30, y: 30 },
     angle: randomRadian()
   })
 }
@@ -52,6 +51,15 @@ function render() {
       );
       ctx.fill();
     }
+    // draw bounding box
+    if (body.dynamic) {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; // transparent white
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.rect(body.shape.bb.minX, body.shape.bb.minY, body.shape.bb.maxX - body.shape.bb.minX, body.shape.bb.maxY - body.shape.bb.minY);
+      ctx.stroke();
+    }
+
     ctx.restore();
   }
 }
