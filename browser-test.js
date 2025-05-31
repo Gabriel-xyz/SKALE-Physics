@@ -4,8 +4,8 @@ import { System } from './system.js';
 import { deg2rad, randomRadian } from './util.js';
 import { Box, Circle } from './shape.js';
 const canvas = document.createElement('canvas');
-canvas.width = 1080;
-canvas.height = 950;
+canvas.width = 1200;
+canvas.height = 1200;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(12);
@@ -14,7 +14,7 @@ for (let i = 0; i < 100; i++) {
     active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 30, y: 30 },
+    scale: { x: 32, y: 32 },
     angle: randomRadian()
   })
 }
@@ -23,7 +23,7 @@ for (let i = 0; i < 100; i++) {
     active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 30, y: 30 },
+    scale: { x: 32, y: 32 },
     angle: randomRadian()
   })
 }
@@ -52,7 +52,7 @@ function render() {
       ctx.fill();
     }
     // draw bounding box
-    if (body.dynamic) {
+    if (true) {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; // transparent white
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -70,7 +70,7 @@ function gameLoop() {
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    body.move(24 * dt)
+    body.move(64 * dt)
     if (body.x < 0 || body.x > canvas.width) {
       body.x = canvas.width * Math.random()
     }

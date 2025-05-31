@@ -1,4 +1,4 @@
-import { DEG2RAD, RAD2DEG } from "./consts.js";
+import { DEG2RAD, RAD2DEG } from "./const.js";
 export function magnitude(v2) {
 	return Math.sqrt(v2.x * v2.x + v2.y * v2.y)
 }

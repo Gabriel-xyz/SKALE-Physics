@@ -19,7 +19,7 @@ export class Body {
 		this.shape = config.shape ?? new Box(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
 		this.shape.body = this
 		if (config.scale) {
-			this.shape.refresh(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
+			this.shape.refresh(this.pos.x, this.pos.y, this.scale.x, this.scale.y,this.dynamic)
 		}
 	}
 	// the reason bodies have their own intersects/separates functions is to handle compound colliders. whereas shapes their own individual functions too

@@ -1,4 +1,4 @@
-import { PADDING } from "./consts.js"
+import { PADDING } from "./const.js"
 class Shape {
 	bb = { shape: this }
 	constructor(trigger = false) {
@@ -10,9 +10,9 @@ export class Box extends Shape {
 		super(trigger)
 		this.refresh(x, y, scaleX, scaleY)
 	}
-	refresh(x = 0, y = 0, scaleX = 1, scaleY = 1) {
+	refresh(x = 0, y = 0, scaleX = 1, scaleY = 1,usePadding=false) {
 		this.refreshShape(x, y, scaleX, scaleY)
-		this.refreshBB()
+		this.refreshBB(usePadding)
 	}
 	refreshShape(x = 0, y = 0, scaleX = 1, scaleY = 1) {
 		this.minX = x
@@ -20,11 +20,12 @@ export class Box extends Shape {
 		this.maxX = x + scaleX
 		this.maxY = y + scaleY
 	}
-	refreshBB() {
-		this.bb.minX = this.minX - PADDING
-		this.bb.minY = this.minY - PADDING
-		this.bb.maxX = this.maxX + PADDING
-		this.bb.maxY = this.maxY + PADDING
+	refreshBB(usePadding=false) {
+		let padding = usePadding ? PADDING : 0
+		this.bb.minX = this.minX - padding
+		this.bb.minY = this.minY - padding
+		this.bb.maxX = this.maxX + padding
+		this.bb.maxY = this.maxY + padding
 	}
 }
 export class Circle extends Shape {
@@ -35,19 +36,20 @@ export class Circle extends Shape {
 		super(trigger)
 		this.refresh(x, y, r)
 	}
-	refresh(x = 0, y = 0, r = 1) {
+	refresh(x = 0, y = 0, r = 1,usePadding=false) {
 		this.refreshShape(x, y, r)
-		this.refreshBB()
+		this.refreshBB(usePadding)
 	}
 	refreshShape(x = 0, y = 0, r = 1) {
 		this.minX = x
 		this.minY = y
 		this.r = r
 	}
-	refreshBB() {
-		this.bb.minX = this.minX - this.r - PADDING
-		this.bb.minY = this.minY - this.r - PADDING
-		this.bb.maxX = this.maxX + this.r + PADDING
-		this.bb.maxY = this.maxY + this.r + PADDING
+	refreshBB(usePadding=false) {
+		let padding = usePadding?PADDING:0
+		this.bb.minX = this.minX - this.r - padding
+		this.bb.minY = this.minY - this.r - padding
+		this.bb.maxX = this.maxX + this.r + padding
+		this.bb.maxY = this.maxY + this.r + padding
 	}
 }

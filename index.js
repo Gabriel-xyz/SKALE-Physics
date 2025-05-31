@@ -1,4 +1,4 @@
-export * from './consts.js'
+export * from './const.js'
 export * from './shape.js'
 export * from './external/quickselect.js'
 export * from './external/rbush.js'
