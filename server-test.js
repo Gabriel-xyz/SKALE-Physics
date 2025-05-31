@@ -53,7 +53,7 @@ let loop = () => {
 		n += n2
 	}
 	n /= times.length
-	if (now - lastLog > 1000) {
+	if (now - lastLog > 2000) {
 		lastLog = now
 		console.log('fps', 1 / n, times.length)
 	}

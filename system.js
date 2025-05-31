@@ -17,21 +17,34 @@ export class System extends RBush {
 
 		let body, potentials, bb
 		// TODO check performance impact of iterating all bodies versus iterating dynamic array and static array separately
-		for (let i = 0; i < this.bodies.length; i++) {
-			body = this.bodies[i]
-			if (!body.shapeChanged || !body.dynamic || !body.active) continue
-			potentials = this.search(body) // TODO how am i supposed to deal with the fact that search() returns bounding boxies not bodies. it doesnt even return shapes it returns actual bounding boxes
-			// TODO would that trick where you do while()/pop() make this faster?
-			// TODO surprising intersects() and separate() and this entire loop in general have almost no performance impact. comment it out and see
+		let subset = this.bodies.filter(b => b.dynamic && b.shapeChanged && b.active)
+		for (let i = 0; i < subset.length; i++) {
+			body = subset[i]
+			potentials = this.search(body)
 			for (let i2 = 0; i2 < potentials.length; i2++) {
 				bb = potentials[i2]
-				if(bb.shape.body == body) continue
-				if (intersects(body.shape, bb.shape.body)) {
-					separate(body, bb)
+				if (bb.shape.body == body) continue
+				if(body.intersects(bb.shape.body)){
+					body.separate(bb.shape.body)
 				}
 			}
 			body.shapeChanged = false
 		}
+		// for (let i = 0; i < this.bodies.length; i++) {
+		// 	body = this.bodies[i]
+		// 	if (!body.shapeChanged || !body.dynamic || !body.active) continue
+		// 	potentials = this.search(body) // TODO how am i supposed to deal with the fact that search() returns bounding boxies not bodies. it doesnt even return shapes it returns actual bounding boxes
+		// 	// TODO would that trick where you do while()/pop() make this faster?
+		// 	// TODO surprising intersects() and separate() and this entire loop in general have almost no performance impact. comment it out and see
+		// 	for (let i2 = 0; i2 < potentials.length; i2++) {
+		// 		bb = potentials[i2]
+		// 		if(bb.shape.body == body) continue
+		// 		if (intersects(body.shape, bb.shape.body)) {
+		// 			separate(body, bb.shape.body)
+		// 		}
+		// 	}
+		// 	body.shapeChanged = false
+		// }
 	}
 	createBody(config) {
 		config.system = this
@@ -44,7 +57,7 @@ export class System extends RBush {
 		if (!body.inserted) this.bodies.push(body)
 		let shape = body.shape
 		if (body.inserted) {
-			if(contains(shape.bb,shape)) return shape.bb // no need to remove and reinsert if body has not moved beyond its padded bb
+			if (contains(shape.bb, shape)) return shape.bb // no need to remove and reinsert if body has not moved beyond its padded bb
 			super.remove(shape.bb)
 			this.bodyRemoveCount++
 		}
@@ -54,7 +67,8 @@ export class System extends RBush {
 	}
 	// TODO i need a preexisting array of all shapes for this to work efficiently so i dont have to create an array of all shapes every tick just to use this function
 	load(shapes) {
-		super.load(shapes)
+		let bba = shapes.map(shape=>shape.bb)
+		super.load(bba)
 	}
 	remove(body) {
 		if (body.inserted) {

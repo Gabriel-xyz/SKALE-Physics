@@ -4,7 +4,7 @@ import { System } from './system.js';
 import { deg2rad, randomRadian } from './util.js';
 import { Box, Circle } from './shape.js';
 const canvas = document.createElement('canvas');
-canvas.width = 1700;
+canvas.width = 1080;
 canvas.height = 950;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
@@ -88,7 +88,7 @@ function gameLoop() {
     n += n2
   }
   n /= times.length
-  if (now - lastLog > 1000) {
+  if (now - lastLog > 2000) {
     lastLog = now
     console.log('fps', 1 / n, times.length)
   }

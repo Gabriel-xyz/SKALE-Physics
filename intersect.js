@@ -1,7 +1,5 @@
-export function separate(body,body2) {
-	let shape = body.shape
-	let shape2 = body2.shape
-	if (!body.dynamic || shape.trigger || shape2.trigger) return;
+export function separate(shape,shape2) {
+	if (!shape.body.dynamic || shape.trigger || shape2.trigger) return;
 	// Calculate overlap on each axis
 	const overlapX = Math.min(shape.maxX - shape2.minX, shape2.maxX - shape.minX);
 	const overlapY = Math.min(shape.maxY - shape2.minY, shape2.maxY - shape.minY);
@@ -34,24 +32,24 @@ export function separate(body,body2) {
 		}
 	}
 	// its important not to set body.x/y here so long as those remain setters because they do things that interfere and make it janky so we do it this way to avoid the setters
-	body.pos.x = shape.minX
-	body.pos.y = shape.minY
-	body.markShapeChanged()
+	shape.body.pos.x = shape.minX
+	shape.body.pos.y = shape.minY
+	shape.body.markShapeChanged()
 }
 // TODO has to work on circles too by checking if it has a defined .r property
 // TODO has to return a separation data object for separate() to use
 // TODO has to use sameLayer to check if the objects share any layer, if not theyre not intersecting
-export function intersects(a, b) {
-	return !notIntersects(a, b)
+export function intersects(shape, shape2) {
+	return !notIntersects(shape, shape2)
 }
 // supposedly using this is faster because || instead of &&. !notIntersects() means they do intersect
-export function notIntersects(a, b) {
-	return b.minX > a.maxX || b.minY > a.maxY || b.maxX < a.minX || b.maxY < a.minY
+export function notIntersects(shape, shape2) {
+	return shape2.minX > shape.maxX || shape2.minY > shape.maxY || shape2.maxX < shape.minX || shape2.maxY < shape.minY
 }
 // TODO make work on circles
 // TODO integrate sameLayer check
-export function contains(a, b) {
-	return !(b.minX < a.minX || b.minY < a.minY || b.maxX > a.maxX || b.maxY > a.maxY)
+export function contains(shape, shape2) {
+	return !(shape2.minX < shape.minX || shape2.minY < shape.minY || shape2.maxX > shape.maxX || shape2.maxY > shape.maxY)
 }
 // check if they share any collision layers, if they dont then they pass right through each other and are not even considered intersecting either (which is for the purpose of triggers, a trigger can only be triggered if you share a layer with the trigger)
 export function sameLayer(a, b) {

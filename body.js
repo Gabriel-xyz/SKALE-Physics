@@ -1,3 +1,4 @@
+import { intersects, separate } from "./intersect.js"
 import { Box } from "./shape.js"
 // TODO signs point to static and dynamic bodies needing to be separate classes. too many things will need conditionally checked and be slow. for example you're not even allowed to move static objects by x/y after creation
 export class Body {
@@ -20,6 +21,13 @@ export class Body {
 		if (config.scale) {
 			this.shape.refresh(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
 		}
+	}
+	// the reason bodies have their own intersects/separates functions is to handle compound colliders. whereas shapes their own individual functions too
+	intersects(body) {
+		return intersects(this.shape, body.shape)
+	}
+	separate(body){
+		return separate(this.shape, body.shape)
 	}
 	// TODO this is a bad setup. i tested it and when we change x and y at the same time (which is the majority of the time) we get twice the calls to system.insert() than we need to. so either these need to not be setters anymore or calling system.insert() needs handled somewhere else than markShapeChanged()
 	get x() {
