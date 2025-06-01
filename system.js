@@ -37,9 +37,7 @@ export class System extends RBush {
 					if (bb.shape.body === body) continue;
 					if (intersects(body.shape, bb.shape)) {
 						const sep = separate(body.shape, bb.shape, body, bb.shape.body);
-						if (sep) {
-							applyImpulse(body, bb.shape.body, sep.normal, sep);
-						}
+						if (sep) applyImpulse(body, bb.shape.body, sep);
 					}
 				}
 				if (!PADDING || !contains(body.shape.bb, body.shape)) {

@@ -88,8 +88,9 @@ export function separate(shapeA, shapeB, bodyA, bodyB) {
 	return { normal, overlap: axis === 'x' ? Math.abs(overlapX) : Math.abs(overlapY), axis };
 }
 // Standard restitution and impulse-based collision response for AABBs
-export function applyImpulse(bodyA, bodyB, normal, sep) {
+export function applyImpulse(bodyA, bodyB, sep) {
 	if (!bodyA.dynamic && (!bodyB || !bodyB.dynamic)) return;
+	let normal = sep.normal
 	// Relative velocity
 	const rvx = (bodyB ? bodyB.vel.x : 0) - bodyA.vel.x;
 	const rvy = (bodyB ? bodyB.vel.y : 0) - bodyA.vel.y;

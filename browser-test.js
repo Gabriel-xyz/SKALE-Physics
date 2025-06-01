@@ -10,21 +10,21 @@ canvas.height = 1200;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(10);
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 100; i++) {
   system.createBody({
     active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 1, y: 1 },
+    scale: { x: 30, y: 30 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 100; i++) {
   system.createBody({
     active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 1, y: 1 },
+    scale: { x: 30, y: 30 },
     angle: randomRadian()
   })
 }
@@ -33,6 +33,7 @@ function render() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   for (const body of system.bodies) {
     body.testColor = body.testColor?body.testColor:`rgb(${255 * Math.random()},${255 * Math.random()},${255 * Math.random()})`;
+    body.testColor = `rgb(${0},${255},${0})`;
     ctx.save();
     ctx.fillStyle = body.dynamic ? body.testColor : '#e74c3c';
     if (body.shape instanceof Box) {
@@ -72,17 +73,16 @@ function gameLoop() {
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    // if(Date.now() - startTime < 2000) body.move(64)
-    body.move(1)
-    // if (body.x < 0 || body.x > canvas.width) {
-    //   body.x = canvas.width * Math.random()
-    // }
-    // if (body.y < 0 || body.y > canvas.height) {
-    //   body.y = canvas.height * Math.random()
-    // }
+    body.move(30)
+    if (body.x < 0 || body.x > canvas.width) {
+      body.x = canvas.width * Math.random()
+    }
+    if (body.y < 0 || body.y > canvas.height) {
+      body.y = canvas.height * Math.random()
+    }
     if (Math.random() < 0.01) body.angle = randomRadian()
     count++
-    // if (count >= 2000) break
+    if (count >= 2000) break
   }
   system.update(dt * 1);
   render();
