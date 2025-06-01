@@ -8,8 +8,7 @@ export class System extends RBush {
 	statics = []
 	constructor(maxEntries = 9) {
 		super(maxEntries)
-		this.staticTree = new RBush(10)
-		this.dynamicTree = new RBush(18)
+		this.dynamicTree = new RBush(10)
 	}
 	update(dt) {
 		for (let body of this.dynamics) {

@@ -5,7 +5,7 @@ import { randomRadian } from './util.js';
 import { Box } from './shape.js';
 const canvas = document.createElement('canvas');
 canvas.width = 1700;
-canvas.height = 950;
+canvas.height = 1000;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(12);
