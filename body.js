@@ -14,8 +14,9 @@ export class Body {
 		this.active = config.active ?? true // false = accel/vel wont be applied this tick and body is noncollidable
 		this.maxSpeed = config.maxSpeed ?? Infinity
 		this.angle = config.angle ?? 0 // exists solely for the move() function right now, has nothing to do with rotation
-		this.damping = config.damping ?? 0.5
-		this.bounce = config.bounce ?? 0
+		this.damping = config.damping ?? 0.1
+		this.bounce = config.bounce ?? 1
+		this.mass = config.mass ?? 1
 	}
 	// the reason bodies have their own intersects/separates functions is to handle compound colliders. whereas shapes their own individual functions too
 	intersects(body) {

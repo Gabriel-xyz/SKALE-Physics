@@ -3,7 +3,7 @@ import './index.js'
 import { System } from './system.js';
 import { randomRadian } from './util.js';
 import { Box } from './shape.js';
-let startTime=Date.now();
+let startTime = Date.now();
 const canvas = document.createElement('canvas');
 canvas.width = 1700;
 canvas.height = 1000;
@@ -15,16 +15,16 @@ for (let i = 0; i < 0; i++) {
     active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 64, y: 64 },
+    scale: { x: 32, y: 32 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 300; i++) {
   system.createBody({
     active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 64, y: 64 },
+    scale: { x: 32, y: 32 },
     angle: randomRadian()
   })
 }
@@ -71,18 +71,19 @@ function gameLoop() {
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    if(Date.now() - startTime < 2000) body.move(64)
-    if (body.x < 0 || body.x > canvas.width) {
-      body.x = canvas.width * Math.random()
-    }
-    if (body.y < 0 || body.y > canvas.height) {
-      body.y = canvas.height * Math.random()
-    }
+    // if(Date.now() - startTime < 2000) body.move(64)
+    body.move(64)
+    // if (body.x < 0 || body.x > canvas.width) {
+    //   body.x = canvas.width * Math.random()
+    // }
+    // if (body.y < 0 || body.y > canvas.height) {
+    //   body.y = canvas.height * Math.random()
+    // }
     if (Math.random() < 0.01) body.angle = randomRadian()
     count++
     // if (count >= 2000) break
   }
-  system.update(dt*1);
+  system.update(dt * 1);
   render();
 
   let now = performance.now()

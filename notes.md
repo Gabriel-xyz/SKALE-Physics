@@ -8,8 +8,6 @@ bouncing
 
 force transfer to body you pushed into
 
-mass
-
 figure out how sleeping works and if we need it
 
 i noticed a lot of optimizations i can make it rbush.js

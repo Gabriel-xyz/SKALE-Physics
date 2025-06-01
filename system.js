@@ -1,7 +1,7 @@
 import { Body } from "./body.js";
 import { PADDING } from "./const.js";
 import RBush from "./external/rbush.js";
-import { contains } from "./intersect.js";
+import { applyImpulse, contains, intersects, separate } from "./intersect.js";
 export class System extends RBush {
 	bodies = []
 	dynamics = []
@@ -12,36 +12,42 @@ export class System extends RBush {
 	}
 	update(dt) {
 		for (let body of this.dynamics) {
-			if (!body.active) continue
-			body.vel.x += body.accel.x
-			body.vel.y += body.accel.y
-			let addX = body.vel.x * dt + body.impulse.x
-			let addY = body.vel.y * dt + body.impulse.y
-			if (addX || addY) body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY)
-			let damp = Math.pow(1 - body.damping, dt); // this makes it framerate independent according to ai
-			body.vel.x *= damp
-			body.vel.y *= damp
-			if (Math.abs(body.vel.x) < 0.001) body.vel.x = 0
-			if (Math.abs(body.vel.y) < 0.001) body.vel.y = 0
-			body.accel.x = 0
-			body.accel.y = 0
-			body.impulse.x = 0
-			body.impulse.y = 0
+			if (!body.active) continue;
+			body.vel.x += body.accel.x * dt;
+			body.vel.y += body.accel.y * dt;
+			body.vel.x += body.impulse.x / body.mass;
+			body.vel.y += body.impulse.y / body.mass;
+			let damp = Math.pow(1 - body.damping, dt);
+			body.vel.x *= damp;
+			body.vel.y *= damp;
+			let addX = body.vel.x * dt;
+			let addY = body.vel.y * dt;
+			if (addX || addY) {
+				body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);
+			}
+			// if (Math.abs(body.vel.x) < 0.001) body.vel.x = 0;
+			// if (Math.abs(body.vel.y) < 0.001) body.vel.y = 0;
+			body.accel.x = 0;
+			body.accel.y = 0;
+			body.impulse.x = 0;
+			body.impulse.y = 0;
 			if (body.shape.shapeChanged) {
-				let potentials
-				potentials = this.dynamicTree.search(body.shape)
+				let potentials = this.dynamicTree.search(body.shape);
 				for (let bb of potentials) {
-					if (bb.shape.body == body) continue
-					if (body.intersects(bb.shape.body)) {
-						body.separate(bb.shape.body)
+					if (bb.shape.body === body) continue;
+					if (intersects(body.shape, bb.shape)) {
+						const sep = separate(body.shape, bb.shape, body, bb.shape.body);
+						if (sep) {
+							applyImpulse(body, bb.shape.body, sep.normal, sep);
+						}
 					}
 				}
 				if (!PADDING || !contains(body.shape.bb, body.shape)) {
-					this.remove(body)
-					body.shape.refreshBB(body.dynamic)
-					this.insert(body)
+					this.remove(body);
+					body.shape.refreshBB(body.dynamic);
+					this.insert(body);
 				}
-				body.shape.shapeChanged = false
+				body.shape.shapeChanged = false;
 			}
 		}
 	}
