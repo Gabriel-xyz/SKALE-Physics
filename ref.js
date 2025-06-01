@@ -1,16 +1,17 @@
 import RBush from './external/rbush.js';
 const staticTree = new RBush(10)
 const dynamicTree = new RBush(18)
+let mapSize = 1200
 let dynamicObjects = [], denseTiles = 500 * 500 * 0.2, players = 200, npcs = 2000, projectiles = 1000, mapDecor = 500 * 500 * 0.05, mapItems = 2000
 for (let i = 0; i < 62500; i++) {
-	let x = 500 * Math.random()
-	let y = 500 * Math.random()
+	let x = mapSize * Math.random()
+	let y = mapSize * Math.random()
 	let object = { minX: x, maxX: x+1, minY: y, maxY: y+1 }
 	staticTree.insert(object)
 }
 for (let i = 0; i < 6000; i++) {
-	let x = 500 * Math.random()
-	let y = 500 * Math.random()
+	let x = mapSize * Math.random()
+	let y = mapSize * Math.random()
 	let object = { minX: x, maxX: x+1, minY: y, maxY: y+1 }
 	dynamicObjects.push(object)
 	dynamicTree.insert(object)
@@ -19,11 +20,6 @@ let tick = 0, now = performance.now(), previous = now, dt = 0, movedObjects = []
 const loop = () => {
 	setImmediate(loop)
 	now = performance.now(), dt = now - previous, previous = now
-
-
-
-
-
 	dynamicTree.clear()
 	for (let i = 0; i < 2000; i++) {
 		var o = dynamicObjects[Math.floor(Math.random() * dynamicObjects.length)]
@@ -34,19 +30,10 @@ const loop = () => {
 		movedObjects.push(o)
 	}
 	dynamicTree.load(dynamicObjects)
-	// console.log(staticTree.all().length,dynamicTree.all().length,movedObjects.length)
 	for (let o of movedObjects) {
 		var overlaps = [...dynamicTree.search(o), ...staticTree.search(o)]
 	}
 	movedObjects = []
-
-
-
-
-
-
-
-
 	tick++
 	times.push(1000 / dt)
 	if (times.length > 500) times.shift()

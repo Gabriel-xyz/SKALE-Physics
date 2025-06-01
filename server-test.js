@@ -24,10 +24,10 @@ for (let i = 0; i < 6000; i++) {
 let now = performance.now(), previous = now, dt = 0, times = [], lastLog = 0
 let loop = () => {
 	setImmediate(loop)
-	now = performance.now(), dt = now - previous, previous = now
+	now = performance.now(), dt = (now - previous) / 1000, previous = now
 	for (let i = 0; i < 2000; i++) {
 		let body = system.dynamics[i]
-		body.move(2 * dt)
+		body.move(1)
 		if (body.x < 0 || body.x > mapSize) {
 			body.x = mapSize * Math.random()
 		}
@@ -38,7 +38,7 @@ let loop = () => {
 	}
 	system.update(dt)
 
-	times.push(1000 / dt)
+	times.push(1 / dt)
 	if (times.length > 500) times.shift()
 	let n = 0
 	for (let n2 of times) {

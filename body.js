@@ -1,73 +1,67 @@
 import { intersects, separate } from "./intersect.js"
 import { Box } from "./shape.js"
 // TODO signs point to static and dynamic bodies needing to be separate classes. too many things will need conditionally checked and be slow. for example you're not even allowed to move static objects by x/y after creation
+// IMPORTANT: turns out Bodies dont have multiple Shapes (compound colliders), instead GameObjects have multiple Bodies (compound bodies) each with one Shape. think about it, if Bodies have multiple Shapes then those Shapes are stuck in formation, they cant move physically independently of each other because only bodies physically move, for example some spider monster with procedural physically moving legs, Bodies move physically not Shapes. so the GameObject has multiple Bodies and GameObject will have its own move()/etc functions that call the same function on all of its bodies at once (aka gameobject.move() calls body.move() for each body) that move all its bodies at once, and other functions to move specific bodies in its compound body, using physics, or setting its position depending on context, both for example for spider legs.
 export class Body {
+	vel = { x: 0, y: 0 }
+	accel = { x: 0, y: 0 }
+	impulse = { x: 0, y: 0 }
 	constructor(config) {
 		this.system = config.system
+		this.dynamic = config.dynamic ?? true
+		this.shape = config.shape ?? new Box(config, this)
 		// TODO make active flag actually do something
 		this.active = config.active ?? true // false = accel/vel wont be applied this tick and body is noncollidable
-		this.dynamic = config.dynamic ?? true
-		this.pos = config.pos ?? { x: 0, y: 0 }
-		this.accel = config.accel ?? { x: 0, y: 0 }
-		this.vel = config.vel ?? { x: 0, y: 0 }
-		this.speed = config.speed ?? 0
 		this.maxSpeed = config.maxSpeed ?? Infinity
 		this.angle = config.angle ?? 0 // exists solely for the move() function right now, has nothing to do with rotation
-		this.damping = config.damping ?? 0
+		this.damping = config.damping ?? 0.5
 		this.bounce = config.bounce ?? 0
-		this.scale = config.scale ?? { x: 1, y: 1 }
-		this.shape = config.shape ?? new Box(this.pos.x, this.pos.y, this.scale.x, this.scale.y)
-		this.shape.body = this
-		if (config.scale) {
-			this.shape.refresh(this.pos.x, this.pos.y, this.scale.x, this.scale.y,this.dynamic)
-		}
 	}
 	// the reason bodies have their own intersects/separates functions is to handle compound colliders. whereas shapes their own individual functions too
 	intersects(body) {
 		return intersects(this.shape, body.shape)
 	}
-	separate(body){
+	separate(body) {
 		return separate(this.shape, body.shape)
 	}
 	get x() {
-		return this.pos.x;
+		return this.shape.minX;
 	}
 	set x(x) {
-		this.pos.x = x;
-		this.shapeChanged = true
+		this.impulse.x = x - this.shape.minX
 	}
 	get y() {
-		return this.pos.y;
+		return this.shape.minY;
 	}
 	set y(y) {
-		this.pos.y = y;
-		this.shapeChanged = true
+		this.impulse.y = y - this.shape.minY
 	}
-	move(speed = 1) {
-		const moveX = Math.cos(this.angle) * speed;
-		const moveY = Math.sin(this.angle) * speed;
-		this.translate(moveX, moveY)
+	move(speed = 0) {
+		let moveX = Math.cos(this.angle) * speed;
+		let moveY = Math.sin(this.angle) * speed;
+		this.accel.x = moveX
+		this.accel.y = moveY
 	}
 	setPos(x, y) {
-		this.pos.x = x
-		this.pos.y = y
-		this.shapeChanged = true
+		this.impulse.x = x - this.shape.minX
+		this.impulse.y = y - this.shape.minY
 		return this
 	}
 	translate(x, y) {
-		this.setPos(this.x + x, this.y + y)
+		this.impulse.x = x
+		this.impulse.y = y
 		return this
 	}
-	setAccel() {
-
+	setAccel(x, y) {
+		this.accel.x = x
+		this.accel.y = y
 	}
-	setVel() {
-
+	setVel(x, y) {
+		this.vel.x = x
+		this.vel.y = y
 	}
 	setScale(x, y) {
-		this.scale.x = x
-		this.scale.y = y
-		this.shapeChanged = true
+		this.shape.setScale(x, y)
 		return this
 	}
 }
