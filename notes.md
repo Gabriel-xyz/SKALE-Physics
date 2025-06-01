@@ -4,6 +4,12 @@ try some other broadphases and see if they outperform rbush for my usecase for e
 
 should world bounds be part of this physics library or handled somewhere else in the game
 
+bouncing
+
+force transfer to body you pushed into
+
+mass
+
 figure out how sleeping works and if we need it
 
 i noticed a lot of optimizations i can make it rbush.js

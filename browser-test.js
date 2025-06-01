@@ -3,13 +3,14 @@ import './index.js'
 import { System } from './system.js';
 import { randomRadian } from './util.js';
 import { Box } from './shape.js';
+let startTime=Date.now();
 const canvas = document.createElement('canvas');
 canvas.width = 1700;
 canvas.height = 1000;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(12);
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 0; i++) {
   system.createBody({
     active: true,
     dynamic: false,
@@ -18,7 +19,7 @@ for (let i = 0; i < 100; i++) {
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 10; i++) {
   system.createBody({
     active: true,
     dynamic: true,
@@ -70,7 +71,7 @@ function gameLoop() {
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    body.move(64)
+    if(Date.now() - startTime < 2000) body.move(64)
     if (body.x < 0 || body.x > canvas.width) {
       body.x = canvas.width * Math.random()
     }

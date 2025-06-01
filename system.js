@@ -18,10 +18,11 @@ export class System extends RBush {
 			let addX = body.vel.x * dt + body.impulse.x
 			let addY = body.vel.y * dt + body.impulse.y
 			if (addX || addY) body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY)
-			body.vel.x *= 1 - body.damping
-			body.vel.y *= 1 - body.damping
-			if (body.vel.x < 0.0001) body.vel.x = 0
-			if (body.vel.y < 0.0001) body.vel.y = 0
+			let damp = Math.pow(1 - body.damping, dt); // this makes it framerate independent according to ai
+			body.vel.x *= damp
+			body.vel.y *= damp
+			if (Math.abs(body.vel.x) < 0.001) body.vel.x = 0
+			if (Math.abs(body.vel.y) < 0.001) body.vel.y = 0
 			body.accel.x = 0
 			body.accel.y = 0
 			body.impulse.x = 0
