@@ -5,26 +5,26 @@ import { randomRadian } from './util.js';
 import { Box } from './shape.js';
 let startTime = Date.now();
 const canvas = document.createElement('canvas');
-canvas.width = 1700;
-canvas.height = 1000;
+canvas.width = 1200;
+canvas.height = 1200;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
-const system = new System(12);
-for (let i = 0; i < 0; i++) {
+const system = new System(10);
+for (let i = 0; i < 10000; i++) {
   system.createBody({
     active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 32, y: 32 },
+    scale: { x: 1, y: 1 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 300; i++) {
+for (let i = 0; i < 10000; i++) {
   system.createBody({
     active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 32, y: 32 },
+    scale: { x: 1, y: 1 },
     angle: randomRadian()
   })
 }
@@ -32,8 +32,9 @@ function render() {
   ctx.fillStyle = '#222';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   for (const body of system.bodies) {
+    body.testColor = body.testColor?body.testColor:`rgb(${255 * Math.random()},${255 * Math.random()},${255 * Math.random()})`;
     ctx.save();
-    ctx.fillStyle = body.dynamic ? '#3498db' : '#e74c3c';
+    ctx.fillStyle = body.dynamic ? body.testColor : '#e74c3c';
     if (body.shape instanceof Box) {
       ctx.fillRect(
         body.shape.minX,
@@ -53,13 +54,13 @@ function render() {
       ctx.fill();
     }
     // draw bounding box
-    if (body.dynamic) {
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; // transparent white
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.rect(body.shape.bb.minX, body.shape.bb.minY, body.shape.bb.maxX - body.shape.bb.minX, body.shape.bb.maxY - body.shape.bb.minY);
-      ctx.stroke();
-    }
+    // if (body.dynamic) {
+    //   ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; // transparent white
+    //   ctx.lineWidth = 1;
+    //   ctx.beginPath();
+    //   ctx.rect(body.shape.bb.minX, body.shape.bb.minY, body.shape.bb.maxX - body.shape.bb.minX, body.shape.bb.maxY - body.shape.bb.minY);
+    //   ctx.stroke();
+    // }
 
     ctx.restore();
   }
@@ -72,7 +73,7 @@ function gameLoop() {
     let body = system.bodies[i]
     if (!body.dynamic) continue
     // if(Date.now() - startTime < 2000) body.move(64)
-    body.move(64)
+    body.move(1)
     // if (body.x < 0 || body.x > canvas.width) {
     //   body.x = canvas.width * Math.random()
     // }
