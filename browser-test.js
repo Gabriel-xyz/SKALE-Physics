@@ -70,6 +70,7 @@ function gameLoop() {
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
+    // if(Date.now() - startTime < 3000) body.move(32)
     body.move(32)
     if (Math.random() < 0.01) body.angle = randomRadian()
   }

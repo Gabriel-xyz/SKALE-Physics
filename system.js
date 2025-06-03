@@ -22,16 +22,14 @@ export class System extends RBush {
 			body.vel.y += body.impulse.y / body.mass;
 			// TODO add a per body max speed option
 			// TODO have a speed property on the body to show you how fast its going, not calculated here but probably a getter on the body that calculates as needed
-			if (magnitude(body.accel) <= 0 && magnitude(body.impulse) <= 0) {
-				let damp = Math.pow(1 - body.damping, dt);
-				body.vel.x *= damp;
-				body.vel.y *= damp;
-				if (Math.abs(body.vel.x) < this.restThreshold) body.vel.x = 0;
-				if (Math.abs(body.vel.y) < this.restThreshold) body.vel.y = 0;
-			}
 			let addX = body.vel.x * dt;
 			let addY = body.vel.y * dt;
 			if (addX || addY) body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);
+			let damp = Math.exp(-body.damping * dt)
+			body.vel.x *= damp;
+			body.vel.y *= damp;
+			if (Math.abs(body.vel.x) < this.restThreshold) body.vel.x = 0;
+			if (Math.abs(body.vel.y) < this.restThreshold) body.vel.y = 0;
 			body.accel.x = 0;
 			body.accel.y = 0;
 			body.impulse.x = 0;
@@ -56,7 +54,6 @@ export class System extends RBush {
 		}
 	}
 	collideWorldBounds(body) {
-		body.bounce=1
 		if (body.shape.minX < 0) {
 			body.shape.setPos(0, body.shape.minY);
 			body.vel.x = -body.vel.x * body.bounce
