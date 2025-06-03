@@ -3,7 +3,7 @@ import { System } from './system.js'
 import { randomRadian } from './util.js'
 let system = new System()
 let mapSize = 1200
-for (let i = 0; i < 60000; i++) {
+for (let i = 0; i < 0; i++) {
 	system.create({
 		dynamic: false,
 		pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
@@ -11,7 +11,7 @@ for (let i = 0; i < 60000; i++) {
 		angle: randomRadian()
 	})
 }
-for (let i = 0; i < 8000; i++) {
+for (let i = 0; i < 10000; i++) {
 	system.create({
 		dynamic: true,
 		pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
@@ -25,14 +25,11 @@ let loop = () => {
 	for (let i = 0; i < system.dynamics.length; i++) {
 		let body = system.dynamics[i]
 		body.move(1)
-		if (body.x < 0 || body.x > mapSize) {
+		if (body.x < 0 || body.x > mapSize || body.y < 0 || body.y > mapSize) {
 			body.x = mapSize * Math.random()
-		}
-		if (body.y < 0 || body.y > mapSize) {
 			body.y = mapSize * Math.random()
 		}
 		if (Math.random() < 0.01) body.angle = randomRadian()
-		// if (i >= 2000) break
 	}
 	system.update(dt)
 

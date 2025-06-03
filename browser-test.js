@@ -5,26 +5,24 @@ import { randomRadian } from './util.js';
 import { Box } from './shape.js';
 let startTime = Date.now();
 const canvas = document.createElement('canvas');
-canvas.width = 900;
-canvas.height = 900;
+canvas.width = 1200;
+canvas.height = 1200;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
-const system = new System(10);
-for (let i = 0; i < 60; i++) {
+const system = new System();
+for (let i = 0; i < 0; i++) {
   system.create({
-    active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
     scale: { x: 30, y: 30 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 60; i++) {
+for (let i = 0; i < 10000; i++) {
   system.create({
-    active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 30, y: 30 },
+    scale: { x: 1, y: 1 },
     angle: randomRadian()
   })
 }
@@ -32,7 +30,7 @@ function render() {
   ctx.fillStyle = '#222';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   for (const body of system.bodies) {
-    body.testColor = body.testColor?body.testColor:`rgb(${255 * Math.random()},${255 * Math.random()},${255 * Math.random()})`;
+    body.testColor = body.testColor ? body.testColor : `rgb(${255 * Math.random()},${255 * Math.random()},${255 * Math.random()})`;
     body.testColor = `rgb(${0},${255},${0})`;
     ctx.save();
     ctx.fillStyle = body.dynamic ? body.testColor : '#e74c3c';
@@ -55,13 +53,13 @@ function render() {
       ctx.fill();
     }
     // draw bounding box
-    if (body.dynamic) {
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; // transparent white
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.rect(body.shape.bb.minX, body.shape.bb.minY, body.shape.bb.maxX - body.shape.bb.minX, body.shape.bb.maxY - body.shape.bb.minY);
-      ctx.stroke();
-    }
+    // if (body.dynamic) {
+    //   ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; // transparent white
+    //   ctx.lineWidth = 1;
+    //   ctx.beginPath();
+    //   ctx.rect(body.shape.bb.minX, body.shape.bb.minY, body.shape.bb.maxX - body.shape.bb.minX, body.shape.bb.maxY - body.shape.bb.minY);
+    //   ctx.stroke();
+    // }
 
     ctx.restore();
   }
@@ -69,11 +67,10 @@ function render() {
 let previous = performance.now(), times = [], lastLog = 0, dt = 1 / 60
 function gameLoop() {
   requestAnimationFrame(gameLoop);
-  let count = 0
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    if(Date.now() - startTime < 5000) body.move(30)
+    body.move(1)
     if (body.x < 0 || body.x > canvas.width) {
       body.x = canvas.width * Math.random()
     }
@@ -81,10 +78,8 @@ function gameLoop() {
       body.y = canvas.height * Math.random()
     }
     if (Math.random() < 0.01) body.angle = randomRadian()
-    count++
-    if (count >= 2000) break
   }
-  system.update(dt * 1);
+  system.update(dt);
   render();
 
   let now = performance.now()
