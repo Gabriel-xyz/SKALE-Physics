@@ -1,8 +1,6 @@
-// TODO has to work on circles too by checking if it has a defined .r property
-// TODO has to return a separation data object for separate() to use?
-
 import { separationResult } from "./const.js";
 
+// TODO has to work on circles too by checking if it has a defined .r property
 // TODO has to use sameLayer to check if the objects share any layer, if not theyre not intersecting
 export function separate(shapeA, shapeB) {
 	let bodyA = shapeA.body, bodyB = shapeB.body

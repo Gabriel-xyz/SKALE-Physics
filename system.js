@@ -9,7 +9,7 @@ export class System extends RBush {
 	restThreshold = 0.0001
 	constructor(maxEntries = 9, worldBounds = { minX: -Infinity, minY: -Infinity, maxX: Infinity, maxY: Infinity }) {
 		super(maxEntries)
-		this.dynamicTree = new RBush(10)
+		this.tree = new RBush(9)
 		this.worldBounds = worldBounds
 	}
 	update(dt) {
@@ -24,12 +24,13 @@ export class System extends RBush {
 			// let damp = Math.pow(1 - body.damping, dt); // TODO seems like if damping is 1 you literally can not move ever no matter the forces above
 			body.vel.x *= damp;
 			body.vel.y *= damp;
-			// TODO remove
+			// TODO add a per body max speed option
+			// TODO have a speed property on the body to show you how fast its going, not calculated here but probably a getter on the body that calculates as needed
 			let max = 100
-			if(body.vel.x>max) body.vel.x=max
-			if(body.vel.y>max) body.vel.y=max
-			if(body.vel.x<-max) body.vel.x=-max
-			if(body.vel.y<-max) body.vel.y=-max
+			if (body.vel.x > max) body.vel.x = max
+			if (body.vel.y > max) body.vel.y = max
+			if (body.vel.x < -max) body.vel.x = -max
+			if (body.vel.y < -max) body.vel.y = -max
 			let addX = body.vel.x * dt;
 			let addY = body.vel.y * dt;
 			if (addX || addY) body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);
@@ -40,7 +41,7 @@ export class System extends RBush {
 			body.impulse.x = 0;
 			body.impulse.y = 0;
 			if (body.shape.shapeChanged) {
-				let potentials = this.dynamicTree.search(body.shape);
+				let potentials = this.tree.search(body.shape);
 				for (let bb of potentials) {
 					if (bb.shape.body === body) continue;
 					if (intersects(body.shape, bb.shape)) {
@@ -49,9 +50,9 @@ export class System extends RBush {
 					}
 				}
 				if (!PADDING || !contains(body.shape.bb, body.shape)) {
-					this.remove(body);
+					this.tree.remove(body.shape.bb);
 					body.shape.refreshBB(body.dynamic);
-					this.insert(body);
+					this.tree.insert(body.shape.bb);
 				}
 				body.shape.shapeChanged = false;
 			}
@@ -60,19 +61,12 @@ export class System extends RBush {
 	create(config) {
 		config.system = this
 		let body = new Body(config)
-		this.insert(body)
+		this.tree.insert(body.shape.bb)
 		this.bodies.push(body)
 		config.dynamic == true ? this.dynamics.push(body) : this.statics.push(body)
 		return body
 	}
-	insert(body) {
-		this.dynamicTree.insert(body.shape.bb)
-
-	}
-	remove(body) {
-		this.dynamicTree.remove(body.shape.bb)
-	}
 	collides(body) {
-		return this.dynamicTree.collides(body.shape)
+		return this.tree.collides(body.shape)
 	}
 }

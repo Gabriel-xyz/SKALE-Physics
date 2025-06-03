@@ -30,26 +30,19 @@ export class Body {
 		return this.shape.minX;
 	}
 	set x(x) {
-		// this.impulse.x = x - this.shape.minX
 		this.shape.setPos(this.shape.minX + x, this.shape.minY)
 	}
 	get y() {
 		return this.shape.minY;
 	}
 	set y(y) {
-		// this.impulse.y = y - this.shape.minY
 		this.shape.setPos(this.shape.minX, this.shape.minY + y)
 	}
 	setPos(x, y) {
-		// this.impulse.x = x - this.shape.minX
-		// this.impulse.y = y - this.shape.minY
 		this.shape.setPos(x, y)
 		return this
 	}
-	// same for this
 	translate(x, y) {
-		// this.impulse.x = x
-		// this.impulse.y = y
 		this.shape.setPos(this.shape.minX + x, this.shape.minY + y)
 		return this
 	}
