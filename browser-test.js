@@ -14,15 +14,15 @@ for (let i = 0; i < 0; i++) {
   system.create({
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 30, y: 30 },
+    scale: { x: 16, y: 16 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 1500; i++) {
   system.create({
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 1, y: 1 },
+    scale: { x: 16, y: 16 },
     angle: randomRadian()
   })
 }
@@ -70,7 +70,7 @@ function gameLoop() {
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    body.move(1)
+    body.move(32)
     if (Math.random() < 0.01) body.angle = randomRadian()
   }
   system.update(dt);
