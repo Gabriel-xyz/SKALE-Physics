@@ -15,26 +15,19 @@ export default class RBush {
     search(bbox) {
         let node = this.data;
         const result = [];
-
         if (!intersects(bbox, node)) return result;
-
-        const toBBox = this.toBBox;
         const nodesToSearch = [];
-
         while (node) {
             for (let i = 0; i < node.children.length; i++) {
                 const child = node.children[i];
-                const childBBox = node.leaf ? toBBox(child) : child;
-
-                if (intersects(bbox, childBBox)) {
+                if (intersects(bbox, child)) {
                     if (node.leaf) result.push(child);
-                    else if (contains(bbox, childBBox)) this._all(child, result);
+                    else if (contains(bbox, child)) this._all(child, result);
                     else nodesToSearch.push(child);
                 }
             }
             node = nodesToSearch.pop();
         }
-
         return result;
     }
 

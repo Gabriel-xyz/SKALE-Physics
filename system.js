@@ -51,11 +51,11 @@ export class System extends RBush {
 					this.insert(body.shape.bb);
 				}
 				body.shape.shapeChanged = false;
-			}
-			if (body.shape.minX < 0 || body.shape.maxX > this.mapSize || body.shape.minY < 0 || body.shape.maxY > this.mapSize) {
-				// TODO add some real code instead of just releporting them randomly
-				body.x = this.mapSize * Math.random()
-				body.y = this.mapSize * Math.random()
+				if (body.shape.minX < 0 || body.shape.maxX > this.mapSize || body.shape.minY < 0 || body.shape.maxY > this.mapSize) {
+					// TODO add some real code instead of just releporting them randomly
+					body.x = this.mapSize * Math.random()
+					body.y = this.mapSize * Math.random()
+				}
 			}
 		}
 	}
