@@ -6,7 +6,7 @@ switch to typescript
 
 try some other broadphases and see if they outperform rbush for my usecase for example quadtree-ts
 
-add world bounds handling
+add world bounds
 
 figure out how sleeping works and if we need it
 

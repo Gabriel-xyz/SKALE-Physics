@@ -8,13 +8,12 @@ export class System extends RBush {
 	dynamics = []
 	statics = []
 	restThreshold = 0.01
-	constructor(maxEntries = 9, worldBounds = { minX: -Infinity, minY: -Infinity, maxX: Infinity, maxY: Infinity }) {
+	constructor(maxEntries = 9, mapSize = 500) {
 		super(maxEntries)
-		this.worldBounds = worldBounds
+		this.mapSize = mapSize
 	}
 	update(dt) {
 		dt = Math.min(dt, 1 / 10) // cap dt to prevent tunneling and far distance teleporting from one slow frame
-		// let count = 0
 		for (let body of this.dynamics) {
 			if (!body.active) continue;
 			body.vel.x += body.accel.x / body.mass * dt;
@@ -38,7 +37,6 @@ export class System extends RBush {
 			body.impulse.x = 0;
 			body.impulse.y = 0;
 			if (body.shape.shapeChanged) {
-				// count++
 				let potentials = this.search(body.shape);
 				for (let bb of potentials) {
 					if (bb.shape.body === body) continue;
@@ -54,8 +52,12 @@ export class System extends RBush {
 				}
 				body.shape.shapeChanged = false;
 			}
+			if (body.shape.minX < 0 || body.shape.maxX > this.mapSize || body.shape.minY < 0 || body.shape.maxY > this.mapSize) {
+				// TODO add some real code instead of just releporting them randomly
+				body.x = this.mapSize * Math.random()
+				body.y = this.mapSize * Math.random()
+			}
 		}
-		// if(Math.random() < 0.01) console.log(count, 'moving bodies')
 	}
 	create(config) {
 		config.system = this
