@@ -8,7 +8,7 @@ export class System extends RBush {
 	dynamics = []
 	statics = []
 	restThreshold = 0.01
-	constructor(maxEntries = 9, mapSize = 500) {
+	constructor(mapSize = 500, maxEntries = 10, minEntries = 7) {
 		super(maxEntries)
 		this.mapSize = mapSize
 	}
@@ -45,18 +45,33 @@ export class System extends RBush {
 						if (sep) sepForce(body, bb.shape.body, sep);
 					}
 				}
+				this.collideWorldBounds(body)
 				if (!PADDING || !contains(body.shape.bb, body.shape)) {
 					this.remove(body.shape.bb);
 					body.shape.refreshBB(body.dynamic);
 					this.insert(body.shape.bb);
 				}
 				body.shape.shapeChanged = false;
-				if (body.shape.minX < 0 || body.shape.maxX > this.mapSize || body.shape.minY < 0 || body.shape.maxY > this.mapSize) {
-					// TODO add some real code instead of just releporting them randomly
-					body.x = this.mapSize * Math.random()
-					body.y = this.mapSize * Math.random()
-				}
 			}
+		}
+	}
+	collideWorldBounds(body) {
+		body.bounce=1
+		if (body.shape.minX < 0) {
+			body.shape.setPos(0, body.shape.minY);
+			body.vel.x = -body.vel.x * body.bounce
+		}
+		if (body.shape.maxX > this.mapSize) {
+			body.shape.setPos(body.shape.minX - (body.shape.maxX - this.mapSize), body.shape.minY);
+			body.vel.x = -body.vel.x * body.bounce
+		}
+		if (body.shape.minY < 0) {
+			body.shape.setPos(body.shape.minX, 0);
+			body.vel.y = -body.vel.y * body.bounce
+		}
+		if (body.shape.maxY > this.mapSize) {
+			body.shape.setPos(body.shape.minX, body.shape.minY - (body.shape.maxY - this.mapSize));
+			body.vel.y = -body.vel.y * body.bounce
 		}
 	}
 	create(config) {

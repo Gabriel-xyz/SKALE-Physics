@@ -2,7 +2,7 @@ import './index.js'
 import { System } from './system.js'
 import { randomRadian } from './util.js'
 let mapSize = 1000
-let system = new System(undefined, mapSize)
+let system = new System(mapSize)
 for (let i = 0; i < 0; i++) {
 	system.create({
 		dynamic: false,
@@ -28,6 +28,22 @@ let loop = () => {
 		if (Math.random() < 0.01) body.angle = randomRadian()
 	}
 	system.update(dt)
+
+
+	let speeds = []
+	for (let i = 0; i < system.dynamics.length; i++) {
+		let body = system.dynamics[i]
+		let speed = Math.sqrt(body.vel.x * body.vel.x + body.vel.y * body.vel.y)
+		speeds.push(speed)
+	}
+	let avgSpeed = 0
+	for (let n of speeds) {
+		avgSpeed += n
+	}
+	avgSpeed /= speeds.length
+	if (Math.random() < 0.01) console.log(avgSpeed)
+
+
 
 	times.push(1 / dt)
 	if (times.length > 500) times.shift()

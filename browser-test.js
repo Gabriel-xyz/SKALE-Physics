@@ -5,11 +5,11 @@ import { randomRadian } from './util.js';
 import { Box } from './shape.js';
 let startTime = Date.now();
 const canvas = document.createElement('canvas');
-canvas.width = 1000;
-canvas.height = 1000;
+canvas.width = 800;
+canvas.height = 800;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
-const system = new System(undefined, canvas.width);
+const system = new System(canvas.width);
 for (let i = 0; i < 0; i++) {
   system.create({
     dynamic: false,
@@ -18,7 +18,7 @@ for (let i = 0; i < 0; i++) {
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 1500; i++) {
+for (let i = 0; i < 200; i++) {
   system.create({
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
@@ -75,6 +75,19 @@ function gameLoop() {
   }
   system.update(dt);
   render();
+
+  let speeds = []
+  for (let i = 0; i < system.dynamics.length; i++) {
+    let body = system.dynamics[i]
+    let speed = Math.sqrt(body.vel.x * body.vel.x + body.vel.y * body.vel.y)
+    speeds.push(speed)
+  }
+  let avgSpeed = 0
+  for (let n of speeds) {
+    avgSpeed += n
+  }
+  avgSpeed /= speeds.length
+  if (Math.random() < 0.01) console.log(avgSpeed)
 
   let now = performance.now()
   dt = (now - previous) / 1000
