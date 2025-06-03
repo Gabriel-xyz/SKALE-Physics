@@ -19,6 +19,7 @@ export class Body {
 		this.mass = config.mass ?? 1
 	}
 	// the reason bodies have their own intersects/separates functions is to handle compound colliders. whereas shapes their own individual functions too
+	// TODO uhh actually bodies dont have compound colliders, gameobjects would have compound bodies
 	intersects(body) {
 		return intersects(this.shape, body.shape)
 	}
@@ -29,29 +30,34 @@ export class Body {
 		return this.shape.minX;
 	}
 	set x(x) {
-		this.impulse.x = x - this.shape.minX
+		// this.impulse.x = x - this.shape.minX
+		this.shape.setPos(this.shape.minX + x, this.shape.minY)
 	}
 	get y() {
 		return this.shape.minY;
 	}
 	set y(y) {
-		this.impulse.y = y - this.shape.minY
+		// this.impulse.y = y - this.shape.minY
+		this.shape.setPos(this.shape.minX, this.shape.minY + y)
+	}
+	setPos(x, y) {
+		// this.impulse.x = x - this.shape.minX
+		// this.impulse.y = y - this.shape.minY
+		this.shape.setPos(x, y)
+		return this
+	}
+	// same for this
+	translate(x, y) {
+		// this.impulse.x = x
+		// this.impulse.y = y
+		this.shape.setPos(this.shape.minX + x, this.shape.minY + y)
+		return this
 	}
 	move(speed = 0) {
 		let moveX = Math.cos(this.angle) * speed;
 		let moveY = Math.sin(this.angle) * speed;
 		this.accel.x = moveX
 		this.accel.y = moveY
-	}
-	setPos(x, y) {
-		this.impulse.x = x - this.shape.minX
-		this.impulse.y = y - this.shape.minY
-		return this
-	}
-	translate(x, y) {
-		this.impulse.x = x
-		this.impulse.y = y
-		return this
 	}
 	setAccel(x, y) {
 		this.accel.x = x
@@ -60,6 +66,14 @@ export class Body {
 	setVel(x, y) {
 		this.vel.x = x
 		this.vel.y = y
+	}
+	addForce(x, y) {
+		this.vel.x += x
+		this.vel.y += y
+	}
+	addImpulse(x, y) {
+		this.impulse.x += x;
+		this.impulse.y += y;
 	}
 	setScale(x, y) {
 		this.shape.setScale(x, y)

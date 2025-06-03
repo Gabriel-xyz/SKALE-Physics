@@ -1,3 +1,7 @@
+add layers
+
+add circles
+
 theres a bug where fps drops forever because of the collide world bounds functionality causing bodies to fly around super fast increasing the amount of collisions or something
 - actually just make proper collide world bounds logic where it doesnt randomly teleport you somewhere else on the map, it just doesnt let you proceed any further, it does the smallest separation possible to put you back in
 

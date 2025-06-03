@@ -10,8 +10,8 @@ canvas.height = 900;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(10);
-for (let i = 0; i < 100; i++) {
-  system.createBody({
+for (let i = 0; i < 60; i++) {
+  system.create({
     active: true,
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
@@ -19,8 +19,8 @@ for (let i = 0; i < 100; i++) {
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 100; i++) {
-  system.createBody({
+for (let i = 0; i < 60; i++) {
+  system.create({
     active: true,
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
@@ -74,6 +74,12 @@ function gameLoop() {
     let body = system.bodies[i]
     if (!body.dynamic) continue
     body.move(30)
+    if (body.x < 0 || body.x > canvas.width) {
+      body.x = canvas.width * Math.random()
+    }
+    if (body.y < 0 || body.y > canvas.height) {
+      body.y = canvas.height * Math.random()
+    }
     if (Math.random() < 0.01) body.angle = randomRadian()
     count++
     if (count >= 2000) break

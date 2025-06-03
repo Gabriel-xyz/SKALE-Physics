@@ -1,94 +1,59 @@
 // TODO has to work on circles too by checking if it has a defined .r property
 // TODO has to return a separation data object for separate() to use?
-// TODO has to use sameLayer to check if the objects share any layer, if not theyre not intersecting
 
-// mine, the other is ai
-export function separate2(shape, shape2) {
-	if (!shape.body.dynamic || shape.trigger || shape2.trigger) return;
-	// Calculate overlap on each axis
-	const overlapX = Math.min(shape.maxX - shape2.minX, shape2.maxX - shape.minX);
-	const overlapY = Math.min(shape.maxY - shape2.minY, shape2.maxY - shape.minY);
-	// If there's no overlap, return
-	if (overlapX <= 0 || overlapY <= 0) {
-		return;
-	}
-	let minX = shape.minX, minY = shape.minY, maxX = shape.maxX, maxY = shape.maxY;
-	// Separate along the axis with the smallest overlap
-	if (overlapX < overlapY) {
-		// X-axis separation
-		const midX1 = (minX + maxX) / 2;
-		const midX2 = (shape2.minX + shape2.maxX) / 2;
-		if (midX1 < midX2) {
-			minX -= overlapX;
-			maxX -= overlapX;
-		} else {
-			minX += overlapX;
-			maxX += overlapX;
-		}
-	} else {
-		// Y-axis separation
-		const midY1 = (minY + maxY) / 2;
-		const midY2 = (shape2.minY + shape2.maxY) / 2;
-		if (midY1 < midY2) {
-			minY -= overlapY;
-			maxY -= overlapY;
-		} else {
-			minY += overlapY;
-			maxY += overlapY;
-		}
-	}
-	shape.setPos(minX, minY)
-}
-// ai example
-// Returns {normal: {x, y}, overlap: value, axis: 'x'|'y'} or null if no overlap
-export function separate(shapeA, shapeB, bodyA, bodyB) {
-	if (!bodyA.dynamic || shapeA.trigger || shapeB.trigger) return null;
-	// Calculate overlap on both axes
+import { separationResult } from "./const.js";
+
+// TODO has to use sameLayer to check if the objects share any layer, if not theyre not intersecting
+export function separate(shapeA, shapeB) {
+	let bodyA = shapeA.body, bodyB = shapeB.body
+	if (!bodyA.dynamic || shapeA.trigger || shapeB.trigger) return;
+	let sep = separationResult
 	const overlapX = Math.min(shapeA.maxX, shapeB.maxX) - Math.max(shapeA.minX, shapeB.minX);
 	const overlapY = Math.min(shapeA.maxY, shapeB.maxY) - Math.max(shapeA.minY, shapeB.minY);
-	if (overlapX <= 0 || overlapY <= 0) return null; // no overlap
+	if (overlapX <= 0 || overlapY <= 0) return
+	sep.normal.x = 0
+	sep.normal.y = 0
 	// Find axis of minimum penetration
 	let sepX = 0, sepY = 0;
-	let normal = { x: 0, y: 0 };
-	let axis;
 	if (overlapX < overlapY) {
-		axis = 'x';
+		sep.axis = 0 // 0 = x, 1 = y
 		// Move along X axis, normal points from A to B
 		const midA = (shapeA.minX + shapeA.maxX) / 2;
 		const midB = (shapeB.minX + shapeB.maxX) / 2;
 		if (midA < midB) {
 			sepX = -overlapX;
-			normal.x = -1;
+			sep.normal.x = -1;
 		} else {
 			sepX = overlapX;
-			normal.x = 1;
+			sep.normal.x = 1;
 		}
 	} else {
-		axis = 'y';
+		sep.axis = 1;
 		// Move along Y axis, normal points from A to B
 		const midA = (shapeA.minY + shapeA.maxY) / 2;
 		const midB = (shapeB.minY + shapeB.maxY) / 2;
 		if (midA < midB) {
 			sepY = -overlapY;
-			normal.y = -1;
+			sep.normal.y = -1;
 		} else {
 			sepY = overlapY;
-			normal.y = 1;
+			sep.normal.y = 1;
 		}
 	}
 	// Move both bodies proportionally to mass if both are dynamic, else move only A
-	let totalMass = (bodyA.dynamic ? bodyA.mass : 0) + (bodyB && bodyB.dynamic ? bodyB.mass : 0);
+	let totalMass = bodyA.mass + (bodyB.dynamic ? bodyB.mass : 0);
 	let amtA = 1, amtB = 0;
-	if (bodyA.dynamic && bodyB && bodyB.dynamic && totalMass > 0) {
+	if (totalMass > 0) {
 		amtA = bodyB.mass / totalMass;
 		amtB = bodyA.mass / totalMass;
 	}
-	if (bodyA.dynamic) shapeA.setPos(shapeA.minX + sepX * amtA, shapeA.minY + sepY * amtA);
-	if (bodyB && bodyB.dynamic) shapeB.setPos(shapeB.minX - sepX * amtB, shapeB.minY - sepY * amtB);
-	return { normal, overlap: axis === 'x' ? Math.abs(overlapX) : Math.abs(overlapY), axis };
+	shapeA.setPos(shapeA.minX + sepX * amtA, shapeA.minY + sepY * amtA);
+	if (bodyB.dynamic) shapeB.setPos(shapeB.minX - sepX * amtB, shapeB.minY - sepY * amtB);
+	sep.overlap = sep.axis === 'x' ? Math.abs(overlapX) : Math.abs(overlapY);
+	return sep
 }
 // Standard restitution and impulse-based collision response for AABBs
-export function applyImpulse(bodyA, bodyB, sep) {
+export function sepForce(bodyA, bodyB, sep) {
 	if (!bodyA.dynamic && (!bodyB || !bodyB.dynamic)) return;
 	let normal = sep.normal
 	// Relative velocity

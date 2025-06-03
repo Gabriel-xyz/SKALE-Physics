@@ -1,33 +1,40 @@
 import { Body } from "./body.js";
 import { PADDING } from "./const.js";
 import RBush from "./external/rbush.js";
-import { applyImpulse, contains, intersects, separate } from "./intersect.js";
+import { sepForce, contains, intersects, separate } from "./intersect.js";
 export class System extends RBush {
-	bodies = []
+	bodies = [] // TODO this can be a Set if we never need to iterate over it
 	dynamics = []
 	statics = []
+	restThreshold = 0.0001
 	constructor(maxEntries = 9, worldBounds = { minX: -Infinity, minY: -Infinity, maxX: Infinity, maxY: Infinity }) {
 		super(maxEntries)
 		this.dynamicTree = new RBush(10)
 		this.worldBounds = worldBounds
 	}
 	update(dt) {
+		dt = Math.min(dt, 1 / 10) // cap dt to prevent tunneling and far distance teleporting from one slow frame
 		for (let body of this.dynamics) {
 			if (!body.active) continue;
-			body.vel.x += body.accel.x * dt;
-			body.vel.y += body.accel.y * dt;
+			body.vel.x += body.accel.x / body.mass * dt;
+			body.vel.y += body.accel.y / body.mass * dt;
 			body.vel.x += body.impulse.x / body.mass;
 			body.vel.y += body.impulse.y / body.mass;
-			let addX = body.vel.x * dt;
-			let addY = body.vel.y * dt;
-			if (addX || addY) {
-				body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);
-			}
-			let damp = Math.pow(1 - body.damping, dt); // TODO seems like if damping is 1 you literally can not move ever no matter the forces above
+			let damp = Math.exp(-body.damping * dt);
+			// let damp = Math.pow(1 - body.damping, dt); // TODO seems like if damping is 1 you literally can not move ever no matter the forces above
 			body.vel.x *= damp;
 			body.vel.y *= damp;
-			if (Math.abs(body.vel.x) < 0.001) body.vel.x = 0;
-			if (Math.abs(body.vel.y) < 0.001) body.vel.y = 0;
+			// TODO remove
+			let max = 100
+			if(body.vel.x>max) body.vel.x=max
+			if(body.vel.y>max) body.vel.y=max
+			if(body.vel.x<-max) body.vel.x=-max
+			if(body.vel.y<-max) body.vel.y=-max
+			let addX = body.vel.x * dt;
+			let addY = body.vel.y * dt;
+			if (addX || addY) body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);
+			if (Math.abs(body.vel.x) < this.restThreshold) body.vel.x = 0;
+			if (Math.abs(body.vel.y) < this.restThreshold) body.vel.y = 0;
 			body.accel.x = 0;
 			body.accel.y = 0;
 			body.impulse.x = 0;
@@ -37,8 +44,8 @@ export class System extends RBush {
 				for (let bb of potentials) {
 					if (bb.shape.body === body) continue;
 					if (intersects(body.shape, bb.shape)) {
-						const sep = separate(body.shape, bb.shape, body, bb.shape.body);
-						if (sep) applyImpulse(body, bb.shape.body, sep);
+						let sep = separate(body.shape, bb.shape);
+						if (sep) sepForce(body, bb.shape.body, sep);
 					}
 				}
 				if (!PADDING || !contains(body.shape.bb, body.shape)) {
@@ -50,7 +57,7 @@ export class System extends RBush {
 			}
 		}
 	}
-	createBody(config) {
+	create(config) {
 		config.system = this
 		let body = new Body(config)
 		this.insert(body)
