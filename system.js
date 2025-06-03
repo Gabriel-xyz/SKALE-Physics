@@ -6,9 +6,10 @@ export class System extends RBush {
 	bodies = []
 	dynamics = []
 	statics = []
-	constructor(maxEntries = 9) {
+	constructor(maxEntries = 9, worldBounds = { minX: -Infinity, minY: -Infinity, maxX: Infinity, maxY: Infinity }) {
 		super(maxEntries)
 		this.dynamicTree = new RBush(10)
+		this.worldBounds = worldBounds
 	}
 	update(dt) {
 		for (let body of this.dynamics) {
@@ -17,16 +18,16 @@ export class System extends RBush {
 			body.vel.y += body.accel.y * dt;
 			body.vel.x += body.impulse.x / body.mass;
 			body.vel.y += body.impulse.y / body.mass;
-			let damp = Math.pow(1 - body.damping, dt);
-			body.vel.x *= damp;
-			body.vel.y *= damp;
 			let addX = body.vel.x * dt;
 			let addY = body.vel.y * dt;
 			if (addX || addY) {
 				body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);
 			}
-			// if (Math.abs(body.vel.x) < 0.001) body.vel.x = 0;
-			// if (Math.abs(body.vel.y) < 0.001) body.vel.y = 0;
+			let damp = Math.pow(1 - body.damping, dt); // TODO seems like if damping is 1 you literally can not move ever no matter the forces above
+			body.vel.x *= damp;
+			body.vel.y *= damp;
+			if (Math.abs(body.vel.x) < 0.001) body.vel.x = 0;
+			if (Math.abs(body.vel.y) < 0.001) body.vel.y = 0;
 			body.accel.x = 0;
 			body.accel.y = 0;
 			body.impulse.x = 0;

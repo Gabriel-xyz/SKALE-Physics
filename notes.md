@@ -7,11 +7,7 @@ switch to typescript
 
 try some other broadphases and see if they outperform rbush for my usecase for example quadtree-ts
 
-should world bounds be part of this physics library or handled somewhere else in the game
-
-bouncing
-
-force transfer to body you pushed into
+add world bounds handling
 
 figure out how sleeping works and if we need it
 
