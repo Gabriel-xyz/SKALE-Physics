@@ -5,7 +5,6 @@ let system = new System()
 let mapSize = 1200
 for (let i = 0; i < 60000; i++) {
 	system.create({
-		active: true,
 		dynamic: false,
 		pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
 		scale: { x: 1, y: 1 },
@@ -14,7 +13,6 @@ for (let i = 0; i < 60000; i++) {
 }
 for (let i = 0; i < 8000; i++) {
 	system.create({
-		active: true,
 		dynamic: true,
 		pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
 		scale: { x: 1, y: 1 },
@@ -23,9 +21,8 @@ for (let i = 0; i < 8000; i++) {
 }
 let now = performance.now(), previous = now, dt = 0, times = [], lastLog = 0
 let loop = () => {
-	setImmediate(loop)
 	now = performance.now(), dt = (now - previous) / 1000, previous = now
-	for (let i = 0; i < 2000; i++) {
+	for (let i = 0; i < system.dynamics.length; i++) {
 		let body = system.dynamics[i]
 		body.move(1)
 		if (body.x < 0 || body.x > mapSize) {
@@ -35,6 +32,7 @@ let loop = () => {
 			body.y = mapSize * Math.random()
 		}
 		if (Math.random() < 0.01) body.angle = randomRadian()
+		// if (i >= 2000) break
 	}
 	system.update(dt)
 
@@ -48,5 +46,6 @@ let loop = () => {
 		lastLog = now
 		console.log(n / times.length, times.length)
 	}
+	setImmediate(loop)
 }
 loop()

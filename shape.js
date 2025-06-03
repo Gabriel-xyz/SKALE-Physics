@@ -1,6 +1,6 @@
 import { PADDING } from "./const.js"
 class Shape {
-	bb = { shape: this }
+	bb = { shape: this, minX: 0, minY: 0, maxX: 0, maxY: 0 }
 	constructor(trigger = false) {
 		this.trigger = trigger
 	}

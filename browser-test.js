@@ -73,7 +73,7 @@ function gameLoop() {
   for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     if (!body.dynamic) continue
-    body.move(30)
+    if(Date.now() - startTime < 5000) body.move(30)
     if (body.x < 0 || body.x > canvas.width) {
       body.x = canvas.width * Math.random()
     }
