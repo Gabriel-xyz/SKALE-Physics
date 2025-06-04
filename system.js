@@ -7,7 +7,7 @@ export class System extends RBush {
 	dynamics = []
 	statics = []
 	awakes = []
-	restThreshold = 0.3
+	restThreshold = 0.2
 	constructor(mapSize = 500, maxEntries = 10, minEntries = 2) {
 		super(maxEntries, minEntries)
 		this.mapSize = mapSize
@@ -51,7 +51,7 @@ export class System extends RBush {
 				}
 				body.shape.shapeChanged = false;
 			}
-			if (now - body.shapeChangedTime > 1000) body.sleep()
+			if (now - body.shapeChangedTime > 200) body.sleep()
 		}
 	}
 	collideWorldBounds(body) {
