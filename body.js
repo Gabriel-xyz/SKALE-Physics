@@ -2,6 +2,7 @@ import { intersects, separate } from "./intersect.js"
 import { Box } from "./shape.js"
 // IMPORTANT: turns out Bodies dont have multiple Shapes (compound colliders), instead GameObjects have multiple Bodies (compound bodies) each with one Shape. think about it, if Bodies have multiple Shapes then those Shapes are stuck in formation, they cant move physically independently of each other because only bodies physically move, for example some spider monster with procedural physically moving legs, Bodies move physically not Shapes. so the GameObject has multiple Bodies and GameObject will have its own move()/etc functions that call the same function on all of its bodies at once (aka gameobject.move() calls body.move() for each body) that move all its bodies at once, and other functions to move specific bodies in its compound body, using physics, or setting its position depending on context, both for example for spider legs.
 export class Body {
+	// TODO i noticed that if you set any of these properties directly it will not awaken the body
 	vel = { x: 0, y: 0 }
 	accel = { x: 0, y: 0 }
 	impulse = { x: 0, y: 0 }
@@ -16,6 +17,17 @@ export class Body {
 		this.damping = config.damping ?? 0.3
 		this.bounce = config.bounce ?? 0.7
 		this.mass = config.mass ?? 1
+		this.shapeChangedTime = 0
+	}
+	sleep(){
+		if(this.sleeping) return
+		this.sleeping = true
+		this.system.awakes.splice(this.system.awakes.indexOf(this), 1);
+	}
+	awake(){
+		if(!this.sleeping) return
+		this.sleeping = false
+		this.system.awakes.push(this)
 	}
 	get x() {
 		return this.shape.minX;
@@ -42,25 +54,29 @@ export class Body {
 		let moveY = Math.sin(this.angle) * speed;
 		this.accel.x = moveX
 		this.accel.y = moveY
+		this.awake()
 	}
 	setAccel(x, y) {
 		this.accel.x = x
 		this.accel.y = y
+		this.awake()
 	}
 	setVel(x, y) {
 		this.vel.x = x
 		this.vel.y = y
+		this.awake()
 	}
 	addForce(x, y) {
 		this.vel.x += x
 		this.vel.y += y
+		this.awake()
 	}
 	addImpulse(x, y) {
 		this.impulse.x += x;
 		this.impulse.y += y;
+		this.awake()
 	}
 	setScale(x, y) {
 		this.shape.setScale(x, y)
-		return this
 	}
 }

@@ -6,6 +6,7 @@ export class System extends RBush {
 	bodies = []
 	dynamics = []
 	statics = []
+	awakes = []
 	restThreshold = 0.01
 	constructor(mapSize = 500, maxEntries = 10, minEntries = 2) {
 		super(maxEntries, minEntries)
@@ -13,7 +14,8 @@ export class System extends RBush {
 	}
 	update(dt) {
 		dt = Math.min(dt, 1 / 10) // cap dt to prevent tunneling and far distance teleporting from one slow frame
-		for (let body of this.dynamics) {
+		let now = performance.now()
+		for (let body of this.awakes) {
 			if (!body.active) continue;
 			body.vel.x += body.accel.x / body.mass * dt;
 			body.vel.y += body.accel.y / body.mass * dt;
@@ -32,6 +34,7 @@ export class System extends RBush {
 			body.impulse.x = 0;
 			body.impulse.y = 0;
 			if (body.shape.shapeChanged) {
+				body.shapeChangedTime = now
 				let potentials = this.search(body.shape);
 				for (let bb of potentials) {
 					if (bb.shape.body === body) continue;
@@ -48,6 +51,7 @@ export class System extends RBush {
 				}
 				body.shape.shapeChanged = false;
 			}
+			if(now - body.shapeChangedTime > 1000) body.sleep()
 		}
 	}
 	collideWorldBounds(body) {
@@ -73,7 +77,8 @@ export class System extends RBush {
 		let body = new Body(config)
 		this.insert(body.shape.bb)
 		this.bodies.push(body)
-		config.dynamic == true ? this.dynamics.push(body) : this.statics.push(body)
+		config.dynamic ? this.dynamics.push(body) : this.statics.push(body)
+		if(config.dynamic) this.awakes.push(body)
 		return body
 	}
 }

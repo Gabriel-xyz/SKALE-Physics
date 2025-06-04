@@ -19,11 +19,13 @@ export class Box extends Shape {
 		this.minX = x
 		this.minY = y
 		this.shapeChanged=true
+		this.body.awake()
 	}
 	setScale(x=1,y=1){
 		this.maxX = this.minX+x
 		this.maxY = this.minY+y
 		this.shapeChanged=true
+		this.body.awake()
 	}
 	refreshBB() {
 		let padding = this.body.dynamic ? PADDING : 0

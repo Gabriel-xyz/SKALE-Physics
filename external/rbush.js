@@ -1,6 +1,6 @@
 import quickselect from './quickselect.js';
 export default class RBush {
-    constructor(maxEntries = 9,minEntries = 4) {
+    constructor(maxEntries = 9, minEntries = 4) {
         this._maxEntries = maxEntries
         this._minEntries = minEntries
         this.clear();
