@@ -4,44 +4,52 @@ import { randomRadian } from './util.js';
 import { Box } from './shape.js';
 let startTime = Date.now();
 const canvas = document.createElement('canvas');
-canvas.width = 1700;
+canvas.width = 950;
 canvas.height = 950;
+let mapSize = 60
+let zoom = canvas.width / mapSize
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
-const system = new System(canvas.width);
+const system = new System(mapSize);
 for (let i = 0; i < 100; i++) {
   system.create({
     dynamic: false,
-    pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 25, y: 25 },
+    pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
+    scale: { x: 1, y: 1 },
     angle: randomRadian()
   })
 }
 for (let i = 0; i < 500; i++) {
   system.create({
     dynamic: true,
-    pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 25, y: 25 },
+    pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
+    scale: { x: 1, y: 1 },
     angle: randomRadian()
   })
 }
+let staticColor = 'rgb(255,0,0)'
+let dynamicColor = 'rgb(0,255,0)'
+let sleepingColor = 'rgb(0,0,255)'
 function render() {
   ctx.fillStyle = '#222';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   for (const body of system.bodies) {
-    body.testColor = body.testColor ? body.testColor : `rgb(${255 * Math.random()},${255 * Math.random()},${255 * Math.random()})`;
-    body.testColor = `rgb(${0},${255},${0})`;
+    let color
+    if (body.sleeping) color = sleepingColor
+    else if (body.dynamic) color = dynamicColor
+    else color = staticColor
     ctx.save();
-    ctx.fillStyle = body.dynamic ? body.testColor : '#e74c3c';
+    ctx.fillStyle = color
     if (body.shape instanceof Box) {
       ctx.fillRect(
-        body.shape.minX,
-        body.shape.minY,
-        body.shape.maxX - body.shape.minX,
-        body.shape.maxY - body.shape.minY
+        body.shape.minX * zoom,
+        body.shape.minY * zoom,
+        (body.shape.maxX - body.shape.minX) * zoom,
+        (body.shape.maxY - body.shape.minY) * zoom
       );
-    } else if ('r' in body.shape) { // render circles, when i finally add them
+    } else { // render circles, when i finally add them
       ctx.beginPath();
+      // TODO remember to use zoom
       ctx.arc(
         body.x + body.shape.r,
         body.y + body.shape.r,
@@ -56,7 +64,7 @@ function render() {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; // transparent white
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.rect(body.shape.bb.minX, body.shape.bb.minY, body.shape.bb.maxX - body.shape.bb.minX, body.shape.bb.maxY - body.shape.bb.minY);
+      ctx.rect(body.shape.bb.minX * zoom, body.shape.bb.minY * zoom, (body.shape.bb.maxX - body.shape.bb.minX) * zoom, (body.shape.bb.maxY - body.shape.bb.minY) * zoom);
       ctx.stroke();
     }
 
@@ -68,10 +76,10 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
   for (let i = 0; i < system.dynamics.length; i++) {
     let body = system.dynamics[i]
-    // if(Date.now() - startTime < 3000) body.move(32)
-    body.move(50)
+    // if(Date.now() - startTime < 3000) body.move(5)
+    body.move(5)
     if (Math.random() < 0.01) body.angle = randomRadian()
-    if (i > 100) break
+    if (i >= 0) break
   }
   system.update(dt);
   render();

@@ -1,4 +1,3 @@
-import { intersects, separate } from "./intersect.js"
 import { Box } from "./shape.js"
 // IMPORTANT: turns out Bodies dont have multiple Shapes (compound colliders), instead GameObjects have multiple Bodies (compound bodies) each with one Shape. think about it, if Bodies have multiple Shapes then those Shapes are stuck in formation, they cant move physically independently of each other because only bodies physically move, for example some spider monster with procedural physically moving legs, Bodies move physically not Shapes. so the GameObject has multiple Bodies and GameObject will have its own move()/etc functions that call the same function on all of its bodies at once (aka gameobject.move() calls body.move() for each body) that move all its bodies at once, and other functions to move specific bodies in its compound body, using physics, or setting its position depending on context, both for example for spider legs.
 export class Body {
@@ -14,10 +13,10 @@ export class Body {
 		this.active = config.active ?? true // false = accel/vel wont be applied this tick and body is noncollidable
 		this.maxSpeed = config.maxSpeed ?? Infinity
 		this.angle = config.angle ?? 0 // exists solely for the move() function right now, has nothing to do with rotation
-		this.damping = config.damping ?? 0.3
+		this.damping = config.damping ?? 0.7
 		this.bounce = config.bounce ?? 0.7
 		this.mass = config.mass ?? 1
-		this.shapeChangedTime = 0
+		this.shapeChangedTime = 0 // TODO this might be better on the shape instead
 	}
 	sleep(){
 		if(this.sleeping) return
