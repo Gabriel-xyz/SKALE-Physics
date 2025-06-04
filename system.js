@@ -7,7 +7,7 @@ export class System extends RBush {
 	dynamics = []
 	statics = []
 	awakes = []
-	restThreshold = 0.01
+	restThreshold = 0.3
 	constructor(mapSize = 500, maxEntries = 10, minEntries = 2) {
 		super(maxEntries, minEntries)
 		this.mapSize = mapSize
@@ -27,8 +27,8 @@ export class System extends RBush {
 			let damp = Math.exp(-body.damping * dt)
 			body.vel.x *= damp;
 			body.vel.y *= damp;
-			if (Math.abs(body.vel.x) < this.restThreshold) body.vel.x = 0;
-			if (Math.abs(body.vel.y) < this.restThreshold) body.vel.y = 0;
+			if (Math.abs(body.vel.x) < this.restThreshold * dt) body.vel.x = 0;
+			if (Math.abs(body.vel.y) < this.restThreshold * dt) body.vel.y = 0;
 			body.accel.x = 0;
 			body.accel.y = 0;
 			body.impulse.x = 0;
@@ -51,7 +51,7 @@ export class System extends RBush {
 				}
 				body.shape.shapeChanged = false;
 			}
-			if(now - body.shapeChangedTime > 1000) body.sleep()
+			if (now - body.shapeChangedTime > 1000) body.sleep()
 		}
 	}
 	collideWorldBounds(body) {
@@ -78,7 +78,7 @@ export class System extends RBush {
 		this.insert(body.shape.bb)
 		this.bodies.push(body)
 		config.dynamic ? this.dynamics.push(body) : this.statics.push(body)
-		if(config.dynamic) this.awakes.push(body)
+		if (config.dynamic) this.awakes.push(body)
 		return body
 	}
 }
