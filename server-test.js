@@ -11,7 +11,7 @@ for (let i = 0; i < 0; i++) {
 		angle: randomRadian()
 	})
 }
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 13000; i++) {
 	system.create({
 		dynamic: true,
 		pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },

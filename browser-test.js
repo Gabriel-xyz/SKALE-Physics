@@ -10,19 +10,19 @@ canvas.height = 950;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(canvas.width);
-for (let i = 0; i < 5000; i++) {
+for (let i = 0; i < 100; i++) {
   system.create({
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 5, y: 5 },
+    scale: { x: 25, y: 25 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 5000; i++) {
+for (let i = 0; i < 100; i++) {
   system.create({
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 5, y: 5 },
+    scale: { x: 25, y: 25 },
     angle: randomRadian()
   })
 }
@@ -71,7 +71,7 @@ function gameLoop() {
     let body = system.bodies[i]
     if (!body.dynamic) continue
     // if(Date.now() - startTime < 3000) body.move(32)
-    body.move(10)
+    body.move(50)
     if (Math.random() < 0.01) body.angle = randomRadian()
   }
   system.update(dt);
