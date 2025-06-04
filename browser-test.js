@@ -82,7 +82,7 @@ function gameLoop() {
     if (Math.random() < 0.01) body.angle = randomRadian()
     if (i >= 0) break
   }
-  system.update(dt);
+  system.step(dt);
   render();
 
   // let speeds = []

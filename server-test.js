@@ -28,7 +28,7 @@ let loop = () => {
 		if (Math.random() < 0.01) body.angle = randomRadian()
 		// if (i >= 2000) break
 	}
-	system.update(dt)
+	system.step(dt)
 
 	// let speeds = []
 	// for (let i = 0; i < system.dynamics.length; i++) {

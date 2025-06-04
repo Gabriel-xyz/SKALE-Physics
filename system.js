@@ -12,7 +12,7 @@ export class System extends RBush {
 		super(maxEntries, minEntries)
 		this.mapSize = mapSize
 	}
-	update(dt) {
+	step(dt) {
 		dt = Math.min(dt, 1 / 10) // cap dt to prevent tunneling and far distance teleporting from one slow frame
 		let now = performance.now()
 		for (let i = 0; i < this.awakes.length; i++) {
