@@ -15,8 +15,9 @@ export class System extends RBush {
 	update(dt) {
 		dt = Math.min(dt, 1 / 10) // cap dt to prevent tunneling and far distance teleporting from one slow frame
 		let now = performance.now()
-		for (let body of this.awakes) {
-			if (!body.active) continue;
+		for (let i = 0; i < this.awakes.length; i++) {
+			let body = this.awakes[i]
+			if (!body.active || body.sleeping) continue;
 			body.vel.x += body.accel.x / body.mass * dt;
 			body.vel.y += body.accel.y / body.mass * dt;
 			body.vel.x += body.impulse.x / body.mass;
@@ -36,7 +37,8 @@ export class System extends RBush {
 			if (body.shape.shapeChanged) {
 				body.shapeChangedTime = now
 				let potentials = this.search(body.shape);
-				for (let bb of potentials) {
+				for(let i=0;i<potentials.length;i++){
+					let bb = potentials[i]
 					if (bb.shape.body === body) continue;
 					if (intersects(body.shape, bb.shape)) {
 						let sep = separate(body.shape, bb.shape);
@@ -51,7 +53,10 @@ export class System extends RBush {
 				}
 				body.shape.shapeChanged = false;
 			}
-			if (now - body.shapeChangedTime > 200) body.sleep()
+			if (now - body.shapeChangedTime > 200){
+				if(!body.sleeping) i--
+				body.sleep()
+			}
 		}
 	}
 	collideWorldBounds(body) {

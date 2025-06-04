@@ -33,7 +33,8 @@ let sleepingColor = 'rgb(0,0,255)'
 function render() {
   ctx.fillStyle = '#222';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  for (const body of system.bodies) {
+  for(let i=0;i<system.bodies.length;i++){
+    let body = system.bodies[i]
     let color
     if (body.sleeping) color = sleepingColor
     else if (body.dynamic) color = dynamicColor
