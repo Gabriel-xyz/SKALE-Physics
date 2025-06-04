@@ -2,13 +2,12 @@ import { Body } from "./body.js";
 import { PADDING } from "./const.js";
 import RBush from "./external/rbush.js";
 import { sepForce, contains, intersects, separate } from "./intersect.js";
-import { magnitude } from "./util.js";
 export class System extends RBush {
-	bodies = [] // TODO this can be a Set if we never need to iterate over it
+	bodies = []
 	dynamics = []
 	statics = []
 	restThreshold = 0.01
-	constructor(mapSize = 500, maxEntries = 9, minEntries = 1) {
+	constructor(mapSize = 500, maxEntries = 10, minEntries = 2) {
 		super(maxEntries, minEntries)
 		this.mapSize = mapSize
 	}
@@ -20,8 +19,6 @@ export class System extends RBush {
 			body.vel.y += body.accel.y / body.mass * dt;
 			body.vel.x += body.impulse.x / body.mass;
 			body.vel.y += body.impulse.y / body.mass;
-			// TODO add a per body max speed option
-			// TODO have a speed property on the body to show you how fast its going, not calculated here but probably a getter on the body that calculates as needed
 			let addX = body.vel.x * dt;
 			let addY = body.vel.y * dt;
 			if (addX || addY) body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);

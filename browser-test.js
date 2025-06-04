@@ -5,24 +5,24 @@ import { randomRadian } from './util.js';
 import { Box } from './shape.js';
 let startTime = Date.now();
 const canvas = document.createElement('canvas');
-canvas.width = 800;
-canvas.height = 800;
+canvas.width = 1700;
+canvas.height = 950;
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(canvas.width);
-for (let i = 0; i < 0; i++) {
+for (let i = 0; i < 5000; i++) {
   system.create({
     dynamic: false,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 16, y: 16 },
+    scale: { x: 5, y: 5 },
     angle: randomRadian()
   })
 }
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 5000; i++) {
   system.create({
     dynamic: true,
     pos: { x: canvas.width * Math.random(), y: canvas.height * Math.random() },
-    scale: { x: 16, y: 16 },
+    scale: { x: 5, y: 5 },
     angle: randomRadian()
   })
 }
@@ -71,7 +71,7 @@ function gameLoop() {
     let body = system.bodies[i]
     if (!body.dynamic) continue
     // if(Date.now() - startTime < 3000) body.move(32)
-    body.move(32)
+    body.move(10)
     if (Math.random() < 0.01) body.angle = randomRadian()
   }
   system.update(dt);

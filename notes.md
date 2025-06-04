@@ -1,12 +1,10 @@
-add layers
+add layers (detect-collisions repo has good example of layers)
 
 add circles
 
 switch to typescript
 
 try some other broadphases and see if they outperform rbush for my usecase for example quadtree-ts
-
-add world bounds
 
 figure out how sleeping works and if we need it
 
