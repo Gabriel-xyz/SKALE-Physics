@@ -37,7 +37,7 @@ export class System extends RBush {
 			if (body.shape.shapeChanged) {
 				body.shapeChangedTime = now
 				let potentials = this.search(body.shape);
-				for(let i=0;i<potentials.length;i++){
+				for (let i = 0; i < potentials.length; i++) {
 					let bb = potentials[i]
 					if (bb.shape.body === body) continue;
 					if (intersects(body.shape, bb.shape)) {
@@ -53,8 +53,8 @@ export class System extends RBush {
 				}
 				body.shape.shapeChanged = false;
 			}
-			if (now - body.shapeChangedTime > 200){
-				if(!body.sleeping) i--
+			if (now - body.shapeChangedTime > 200) {
+				if (!body.sleeping) i--
 				body.sleep()
 			}
 		}
