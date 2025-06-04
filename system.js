@@ -8,8 +8,8 @@ export class System extends RBush {
 	dynamics = []
 	statics = []
 	restThreshold = 0.01
-	constructor(mapSize = 500, maxEntries = 10, minEntries = 7) {
-		super(maxEntries)
+	constructor(mapSize = 500, maxEntries = 9, minEntries = 1) {
+		super(maxEntries, minEntries)
 		this.mapSize = mapSize
 	}
 	update(dt) {

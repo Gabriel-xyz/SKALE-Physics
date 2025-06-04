@@ -77,18 +77,18 @@ function gameLoop() {
   system.update(dt);
   render();
 
-  let speeds = []
-  for (let i = 0; i < system.dynamics.length; i++) {
-    let body = system.dynamics[i]
-    let speed = Math.sqrt(body.vel.x * body.vel.x + body.vel.y * body.vel.y)
-    speeds.push(speed)
-  }
-  let avgSpeed = 0
-  for (let n of speeds) {
-    avgSpeed += n
-  }
-  avgSpeed /= speeds.length
-  if (Math.random() < 0.01) console.log(avgSpeed)
+  // let speeds = []
+  // for (let i = 0; i < system.dynamics.length; i++) {
+  //   let body = system.dynamics[i]
+  //   let speed = Math.sqrt(body.vel.x * body.vel.x + body.vel.y * body.vel.y)
+  //   speeds.push(speed)
+  // }
+  // let avgSpeed = 0
+  // for (let n of speeds) {
+  //   avgSpeed += n
+  // }
+  // avgSpeed /= speeds.length
+  // if (Math.random() < 0.01) console.log(avgSpeed)
 
   let now = performance.now()
   dt = (now - previous) / 1000
