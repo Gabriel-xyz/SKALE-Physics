@@ -78,7 +78,7 @@ export default class RBush {
         this.data = createNode([]);
         return this;
     }
-    remove(item, equalsFn) {
+    remove(item) {
         if (!item) return this;
         let node = this.data;
         const bbox = item
@@ -94,7 +94,7 @@ export default class RBush {
                 goingUp = true;
             }
             if (node.leaf) { // check current node
-                const index = findItem(item, node.children, equalsFn);
+                const index = node.children.indexOf(item)
                 if (index !== -1) {
                     // item found, remove the item and condense tree upwards
                     node.children.splice(index, 1);
@@ -358,21 +358,10 @@ export default class RBush {
         }
     }
 }
-
-function findItem(item, items, equalsFn) {
-    if (!equalsFn) return items.indexOf(item);
-
-    for (let i = 0; i < items.length; i++) {
-        if (equalsFn(item, items[i])) return i;
-    }
-    return -1;
-}
-
 // calculate node's bbox from bboxes of its children
 function calcBBox(node, toBBox) {
     distBBox(node, 0, node.children.length, toBBox, node);
 }
-
 // min bounding rectangle of node children from k to p-1
 function distBBox(node, k, p, toBBox, destNode) {
     if (!destNode) destNode = createNode(null);

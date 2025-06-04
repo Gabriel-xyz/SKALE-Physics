@@ -31,7 +31,6 @@ export class System extends RBush {
 			body.accel.y = 0;
 			body.impulse.x = 0;
 			body.impulse.y = 0;
-			// TODO i think i forgot to ignore triggers, that'd make it faster
 			if (body.shape.shapeChanged) {
 				let potentials = this.search(body.shape);
 				for (let bb of potentials) {

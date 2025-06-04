@@ -1,4 +1,3 @@
-// TODO get some circles in the demo
 import './index.js'
 import { System } from './system.js';
 import { randomRadian } from './util.js';

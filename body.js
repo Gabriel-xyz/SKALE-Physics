@@ -1,6 +1,5 @@
 import { intersects, separate } from "./intersect.js"
 import { Box } from "./shape.js"
-// TODO signs point to static and dynamic bodies needing to be separate classes. too many things will need conditionally checked and be slow. for example you're not even allowed to move static objects by x/y after creation
 // IMPORTANT: turns out Bodies dont have multiple Shapes (compound colliders), instead GameObjects have multiple Bodies (compound bodies) each with one Shape. think about it, if Bodies have multiple Shapes then those Shapes are stuck in formation, they cant move physically independently of each other because only bodies physically move, for example some spider monster with procedural physically moving legs, Bodies move physically not Shapes. so the GameObject has multiple Bodies and GameObject will have its own move()/etc functions that call the same function on all of its bodies at once (aka gameobject.move() calls body.move() for each body) that move all its bodies at once, and other functions to move specific bodies in its compound body, using physics, or setting its position depending on context, both for example for spider legs.
 export class Body {
 	vel = { x: 0, y: 0 }
@@ -17,14 +16,6 @@ export class Body {
 		this.damping = config.damping ?? 0.3
 		this.bounce = config.bounce ?? 0.7
 		this.mass = config.mass ?? 1
-	}
-	// the reason bodies have their own intersects/separates functions is to handle compound colliders. whereas shapes their own individual functions too
-	// TODO uhh actually bodies dont have compound colliders, gameobjects would have compound bodies
-	intersects(body) {
-		return intersects(this.shape, body.shape)
-	}
-	separate(body) {
-		return separate(this.shape, body.shape)
 	}
 	get x() {
 		return this.shape.minX;
