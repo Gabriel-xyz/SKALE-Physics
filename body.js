@@ -14,7 +14,6 @@ export class Body {
 		this.shape = config.shape ?? new Box(config, this)
 		// TODO make active flag actually do something
 		this.active = config.active ?? true
-		this.maxSpeed = config.maxSpeed ?? Infinity
 		this.angle = config.angle ?? 0 // exists solely for the move() function, has nothing to do with rotation
 		this.damping = config.damping ?? 0.7
 		this.bounce = config.bounce ?? 0.7
