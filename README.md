@@ -41,7 +41,7 @@ SKALE Physics includes:
 | **Body Interactions** | Bodies can push or impart forces on each other. |
 
 ## Missing Features
-The library is in alpha and lacks three features for completion (funding needed):
+The library is in alpha and lacks three features for completion:
 - Raycasting
 - Circle Colliders
 - Collision/Trigger Callbacks
