@@ -6,31 +6,31 @@ let startTime = Date.now();
 const canvas = document.createElement('canvas');
 canvas.width = screen.height;
 canvas.height = screen.height;
-let mapSize = 400
+let mapSize = 140
 let zoom = canvas.width / mapSize
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(mapSize);
-for (let i = 0; i < 30000; i++) {
-  let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
+for (let i = 0; i < 3000; i++) {
+  // let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
   system.create({
     dynamic: false,
     pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
     scale: { x: 1, y: 1 },
     angle: randomRadian(),
-    layerMask: mask,
-    collisionMask: mask
+    // layerMask: mask,
+    // collisionMask: mask
   })
 }
-for (let i = 0; i < 15000; i++) {
-  let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
+for (let i = 0; i < 3000; i++) {
+  // let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
   system.create({
     dynamic: true,
     pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
     scale: { x: 1, y: 1 },
     angle: randomRadian(),
-    layerMask: mask,
-    collisionMask: mask
+    // layerMask: mask,
+    // collisionMask: mask
   })
 }
 let staticColor = 'rgb(255,0,0)'
@@ -84,9 +84,9 @@ function gameLoop() {
   for (let i = 0; i < system.dynamics.length; i++) {
     let body = system.dynamics[i]
     // if(Date.now() - startTime < 3000) body.move(5)
-    body.move(1)
+    body.move(5)
     if (Math.random() < 0.002) body.angle = randomRadian()
-    if (i >= 7500) break
+    if (i >= 1000) break
   }
   system.step(dt);
   render();
