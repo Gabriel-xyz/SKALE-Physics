@@ -19,8 +19,8 @@ A zero-dependency 2D **Arcade Physics Engine** for games, designed for massive s
 SKALE Physics is made for a certain type of game requiring massive numbers of bodies, such as multiplayer or massive simulation games. It achieves unmatched performance by removing features simulation games rarely need, and using arcade-style physics rather than realistic simulations.
 
 On a 2014 CPU (i5 4690K), in browser, it handles:
-- **20,000 static boxes** (red) 🟥
-- **10,000 dynamic boxes** (5,000 moving (green) 🟩, 5,000 sleeping (blue) 🟦)
+- **20,000 static boxes** 🟥
+- **10,000 dynamic boxes** (5,000 moving 🟩, 5,000 sleeping 🟦)
 - **60 FPS** in the browser, with even better performance on servers (rendering is the bottleneck).
 
 ## Features
