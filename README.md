@@ -27,6 +27,7 @@ What it does have:
 - Body imparting force onto a body it collides with
 - Collide World Bounds (Can't leave bounds of "the world")
 - "Wall Sliding"
+- Data Oriented Design (for speed)
 
 In my tests it outperformed every existing javascript physics engine by far, including box2d3-wasm.
 It outperforms matterjs by far.
