@@ -6,12 +6,12 @@ let startTime = Date.now();
 const canvas = document.createElement('canvas');
 canvas.width = screen.height;
 canvas.height = screen.height;
-let mapSize = 200
+let mapSize = 400
 let zoom = canvas.width / mapSize
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(mapSize);
-for (let i = 0; i < 20000; i++) {
+for (let i = 0; i < 30000; i++) {
   let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
   system.create({
     dynamic: false,
@@ -22,7 +22,7 @@ for (let i = 0; i < 20000; i++) {
     collisionMask: mask
   })
 }
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 15000; i++) {
   let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
   system.create({
     dynamic: true,
@@ -86,7 +86,7 @@ function gameLoop() {
     // if(Date.now() - startTime < 3000) body.move(5)
     body.move(1)
     if (Math.random() < 0.002) body.angle = randomRadian()
-    if (i >= 5000) break
+    if (i >= 7500) break
   }
   system.step(dt);
   render();
