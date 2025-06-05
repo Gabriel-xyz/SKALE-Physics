@@ -67,13 +67,13 @@ function render() {
       ctx.fill();
     }
     // draw bounding box
-    // if (body.dynamic) {
-    //   ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
-    //   ctx.lineWidth = 1;
-    //   ctx.beginPath();
-    //   ctx.rect(body.shape.bb.minX * zoom, body.shape.bb.minY * zoom, (body.shape.bb.maxX - body.shape.bb.minX) * zoom, (body.shape.bb.maxY - body.shape.bb.minY) * zoom);
-    //   ctx.stroke();
-    // }
+    if (body.dynamic) {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.rect(body.shape.bb.minX * zoom, body.shape.bb.minY * zoom, (body.shape.bb.maxX - body.shape.bb.minX) * zoom, (body.shape.bb.maxY - body.shape.bb.minY) * zoom);
+      ctx.stroke();
+    }
 
     ctx.restore();
   }
