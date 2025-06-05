@@ -2,7 +2,7 @@
 
 ![Alpha Version](https://img.shields.io/badge/Version-Alpha-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Language](https://img.shields.io/badge/Language-JavaScript-yellow)
 
-A 2D **Arcade Physics Engine** for games, designed for massive simulation games like *Dwarf Fortress* or *Rimworld* needing many thousands of moving bodies at once. Built for speed, it prioritizes performance over realistic physics, enabling 50,000+ bodies at 60 FPS when running as a server.
+A 2D **Arcade Physics Engine** for games, designed for massive simulation games like *Dwarf Fortress* or *Rimworld* needing many thousands of moving bodies at once. Built for speed, it prioritizes performance over realistic physics, enabling 50,000+ bodies at 60 FPS when running as a server. This screenshot is 30,000 static objects (🟥), 15,000 dynamic objects (9000 moving (🟩) and 6000 only moving if collided against (🟦))
 
 ![SKALE Physics Demo](https://raw.githubusercontent.com/Gabriel-xyz/SKALE-Physics/main/screenshot.jpg)
 
