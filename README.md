@@ -4,8 +4,9 @@ This library is 3 features away from being complete:
 - Raycasting
 - Circles
 - Collision/Trigger Callbacks
+It seems to work perfectly fine if you don't need these features.
 
-SKALE Physics is a 2D "Arcade Physics Engine" made as fast as possible for certain types of games, not 100% realistic physics, because realism = slow. Primarily for topdown simulation games that need as many bodies on screen as possible (Dwarf Fortress, Rimworld). Those type of games do not need certain features, which allowed those features to be removed for speed:
+SKALE Physics is a 2D "Arcade Physics Engine" (for Games) made as fast as possible for certain types of games, because it has optimized physics not realistic physics. Primarily for topdown simulation games that need as many bodies on screen as possible (Dwarf Fortress, Rimworld). Those type of games do not need certain features, which allowed those features to be removed for speed:
 - AABB/Circle collisions only. Faster than SAT or any other option
 - Doesn't care about stacked objects looking perfect (although they still seem to look okay)
 - No joints or constraints. Simulation games do not often need these
@@ -24,10 +25,13 @@ What it does have:
 - Body pushing another
 - Body imparting force onto a body it collides with
 - Collide World Bounds (Can't leave bounds of "the world")
+- "Wall Sliding"
 
 In my tests it outperformed every existing javascript physics engine by far, including box2d3-wasm.
-It outperforms matterjs by far in speed.
+It outperforms matterjs by far.
 Those libraries are designed for realistic physics simulation. They are not "Arcade Physics" "for Games".
 It outperforms Phaser Arcade Physics by far.
 
 This library can run on server or browser but it runs immensely faster on server because I designed it for my multiplayer game.
+
+This library is kind of like if you wanted 2D RPG movement then one day decided you need some physics too.
