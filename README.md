@@ -1,6 +1,6 @@
 [Alpha Version]
 
-This is 20,000 static boxes (red) and 10,000 dynamic boxies (5,000 moving (green) and 5,000 sleeping (blue)) @ 60 fps on an 11 year old CPU. You get much more when running on a server (because rendering these is the bottleneck) and modern CPU.
+This is 20,000 static boxes (red) and 10,000 dynamic boxes (5,000 moving (green) and 5,000 sleeping (blue)) @ 60 fps on a CPU from 2014. You get much more when running on a server (because rendering these is the bottleneck) and modern CPU.
 ![Screenshot description](https://raw.githubusercontent.com/Gabriel-xyz/SKALE-Physics/main/screenshot.jpg)
 
 This library is 3 features away from being complete:
@@ -12,7 +12,7 @@ It seems to work perfectly fine if you don't need these features.
 
 SKALE Physics is a 2D "Arcade Physics Engine" (for Games) made as fast as possible for certain types of games, because it has optimized physics not realistic physics. Primarily for topdown simulation games that need as many bodies on screen as possible (Dwarf Fortress, Rimworld). Those type of games do not need certain features, which allowed those features to be removed for speed:
 - AABB/Circle collisions only. Faster than SAT or any other option
-- Doesn't care about stacked objects looking perfect (although they still seem to look okay)
+- Doesn't care about stacked bodies looking perfect (although they still seem to look okay)
 - No joints or constraints. Simulation games do not often need these
 - No compound colliders
 
@@ -40,3 +40,7 @@ It outperforms Phaser Arcade Physics by far.
 This library can run on server or browser but it runs immensely faster on server because I designed it for my multiplayer game.
 
 This library is kind of like if you wanted 2D RPG movement then one day decided you need some physics too.
+
+Benchmarks:
+- Server: 0 static bodies, 20,000 dynamic bodies (12,000 moving, 8000 only moving if collided with), 62 fps. i5 4690K (2014 CPU)
+- Browser: 20,000 static bodies (static bodies use no CPU), 10,000 dynamic bodies (6000 moving, 4000 only if collided with), 60 fps.
