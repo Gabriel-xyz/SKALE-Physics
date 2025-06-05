@@ -1,5 +1,6 @@
 [Alpha Version]
 
+This is 20,000 static boxes (red) and 10,000 dynamic boxies (5,000 moving (green) and 5,000 sleeping (blue)) @ 60 fps on an 11 year old CPU. You get much more when running on a server (because rendering these is the bottleneck) and modern CPU.
 ![Screenshot description](https://raw.githubusercontent.com/Gabriel-xyz/SKALE-Physics/main/screenshot.jpg)
 
 This library is 3 features away from being complete:
