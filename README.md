@@ -33,7 +33,7 @@ SKALE Physics includes:
 | **Layers** | Define which bodies collide with each other using collision and layer masks. |
 | **Body Sleeping** | Optimizes performance by putting non-moving bodies to sleep. |
 | **Triggers** | Support for trigger bodies. |
-| **Optimized RBush** | Custom RBush implementation, 10% faster than standard. |
+| **Optimized RBush** | Optimized RBush implementation, 10% faster than RBush. |
 | **Broadphase Padding** | Significant optimization for collision detection. |
 | **Physics Properties** | Mass, bounce, damping, velocity, acceleration, impulse. |
 | **World Bounds** | Bodies can't leave the defined world boundaries. |
