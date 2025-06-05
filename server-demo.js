@@ -1,9 +1,9 @@
 import './index.js'
 import { System } from './system.js'
 import { randomRadian } from './util.js'
-let mapSize = 1000
+let mapSize = 1200
 let system = new System(mapSize)
-for (let i = 0; i < 0; i++) {
+for (let i = 0; i < 100000; i++) {
 	let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
 	system.create({
 		dynamic: false,
@@ -14,7 +14,7 @@ for (let i = 0; i < 0; i++) {
 		collisionMask: mask
 	})
 }
-for (let i = 0; i < 20000; i++) {
+for (let i = 0; i < 18000; i++) {
 	let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
 	system.create({
 		dynamic: true,
@@ -32,8 +32,8 @@ let loop = () => {
 	for (let i = 0; i < system.dynamics.length; i++) {
 		let body = system.dynamics[i]
 		body.move(1)
-		if (Math.random() < 0.01) body.angle = randomRadian()
-		if (i >= 9000) break
+		if (Math.random() < 0.002) body.angle = randomRadian()
+		if (i >= 6000) break
 	}
 	system.step(dt)
 
