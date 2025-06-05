@@ -135,78 +135,56 @@ export default class RBush {
         return result;
     }
     _build(items, left, right, height) {
-
         const N = right - left + 1;
         let M = this._maxEntries;
         let node;
-
         if (N <= M) {
             // reached leaf level; return leaf
             node = createNode(items.slice(left, right + 1));
             calcBBox(node, this.toBBox);
             return node;
         }
-
         if (!height) {
             // target height of the bulk-loaded tree
             height = Math.ceil(Math.log(N) / Math.log(M));
-
             // target number of root entries to maximize storage utilization
             M = Math.ceil(N / Math.pow(M, height - 1));
         }
-
         node = createNode([]);
         node.leaf = false;
         node.height = height;
-
         // split the items into M mostly square tiles
-
         const N2 = Math.ceil(N / M);
         const N1 = N2 * Math.ceil(Math.sqrt(M));
-
         multiSelect(items, left, right, N1, this.compareMinX);
-
         for (let i = left; i <= right; i += N1) {
-
             const right2 = Math.min(i + N1 - 1, right);
-
             multiSelect(items, i, right2, N2, this.compareMinY);
-
             for (let j = i; j <= right2; j += N2) {
-
                 const right3 = Math.min(j + N2 - 1, right2);
-
                 // pack each entry recursively
                 node.children.push(this._build(items, j, right3, height - 1));
             }
         }
-
         calcBBox(node, this.toBBox);
-
         return node;
     }
-
     _chooseSubtree(bbox, node, level, path) {
         while (true) {
             path.push(node);
-
             if (node.leaf || path.length - 1 === level) break;
-
             let minArea = Infinity;
             let minEnlargement = Infinity;
             let targetNode;
-
             for (let i = 0; i < node.children.length; i++) {
                 const child = node.children[i];
                 const area = bboxArea(child);
                 const enlargement = enlargedArea(bbox, child) - area;
-
                 // choose entry with the least area enlargement
                 if (enlargement < minEnlargement) {
                     minEnlargement = enlargement;
                     minArea = area < minArea ? area : minArea;
                     targetNode = child;
-
                 } else if (enlargement === minEnlargement) {
                     // otherwise choose one with the smallest area
                     if (area < minArea) {
@@ -215,13 +193,10 @@ export default class RBush {
                     }
                 }
             }
-
             node = targetNode || node.children[0];
         }
-
         return node;
     }
-
     _insert(item, level, isNode) {
         const bbox = item
         const insertPath = [];
@@ -246,22 +221,16 @@ export default class RBush {
         const node = insertPath[level];
         const M = node.children.length;
         const m = this._minEntries;
-
         this._chooseSplitAxis(node, m, M);
-
         const splitIndex = this._chooseSplitIndex(node, m, M);
-
         const newNode = createNode(node.children.splice(splitIndex, node.children.length - splitIndex));
         newNode.height = node.height;
         newNode.leaf = node.leaf;
-
         calcBBox(node, this.toBBox);
         calcBBox(newNode, this.toBBox);
-
         if (level) insertPath[level - 1].children.push(newNode);
         else this._splitRoot(node, newNode);
     }
-
     _splitRoot(node, newNode) {
         // split root node
         this.data = createNode([node, newNode]);
@@ -269,26 +238,20 @@ export default class RBush {
         this.data.leaf = false;
         calcBBox(this.data, this.toBBox);
     }
-
     _chooseSplitIndex(node, m, M) {
         let index;
         let minOverlap = Infinity;
         let minArea = Infinity;
-
         for (let i = m; i <= M - m; i++) {
             const bbox1 = distBBox(node, 0, i, this.toBBox);
             const bbox2 = distBBox(node, i, M, this.toBBox);
-
             const overlap = intersectionArea(bbox1, bbox2);
             const area = bboxArea(bbox1) + bboxArea(bbox2);
-
             // choose distribution with minimum overlap
             if (overlap < minOverlap) {
                 minOverlap = overlap;
                 index = i;
-
                 minArea = area < minArea ? area : minArea;
-
             } else if (overlap === minOverlap) {
                 // otherwise choose distribution with minimum area
                 if (area < minArea) {
@@ -297,53 +260,43 @@ export default class RBush {
                 }
             }
         }
-
         return index || M - m;
     }
-
     // sorts node children by the best axis for split
     _chooseSplitAxis(node, m, M) {
         const compareMinX = node.leaf ? this.compareMinX : compareNodeMinX;
         const compareMinY = node.leaf ? this.compareMinY : compareNodeMinY;
         const xMargin = this._allDistMargin(node, m, M, compareMinX);
         const yMargin = this._allDistMargin(node, m, M, compareMinY);
-
         // if total distributions margin value is minimal for x, sort by minX,
         // otherwise it's already sorted by minY
         if (xMargin < yMargin) node.children.sort(compareMinX);
     }
-
     // total margin of all possible split distributions where each node is at least m full
     _allDistMargin(node, m, M, compare) {
         node.children.sort(compare);
-
         const toBBox = this.toBBox;
         const leftBBox = distBBox(node, 0, m, toBBox);
         const rightBBox = distBBox(node, M - m, M, toBBox);
         let margin = bboxMargin(leftBBox) + bboxMargin(rightBBox);
-
         for (let i = m; i < M - m; i++) {
             const child = node.children[i];
             extend(leftBBox, child);
             margin += bboxMargin(leftBBox);
         }
-
         for (let i = M - m - 1; i >= m; i--) {
             const child = node.children[i];
             extend(rightBBox, child);
             margin += bboxMargin(rightBBox);
         }
-
         return margin;
     }
-
     _adjustParentBBoxes(bbox, path, level) {
         // adjust bboxes along the given tree path
         for (let i = level; i >= 0; i--) {
             extend(path[i], bbox);
         }
     }
-
     _condense(path) {
         // go through the path, removing empty nodes and updating bboxes
         for (let i = path.length - 1, siblings; i >= 0; i--) {
@@ -351,9 +304,7 @@ export default class RBush {
                 if (i > 0) {
                     siblings = path[i - 1].children;
                     siblings.splice(siblings.indexOf(path[i]), 1);
-
                 } else this.clear();
-
             } else calcBBox(path[i], this.toBBox);
         }
     }

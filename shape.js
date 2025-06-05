@@ -18,13 +18,13 @@ export class Box extends Shape {
 		this.maxY += y - this.minY
 		this.minX = x
 		this.minY = y
-		this.shapeChanged=true
+		this.shapeChanged = true
 		this.body.awake()
 	}
-	setScale(x=1,y=1){
-		this.maxX = this.minX+x
-		this.maxY = this.minY+y
-		this.shapeChanged=true
+	setScale(x = 1, y = 1) {
+		this.maxX = this.minX + x
+		this.maxY = this.minY + y
+		this.shapeChanged = true
 		this.body.awake()
 	}
 	refreshBB() {

@@ -1,7 +1,8 @@
 import { Body } from "./body.js";
 import { PADDING } from "./const.js";
-import RBush from "./external/rbush.js";
+import RBush from "./external/rbush-optimized.js";
 import { sepForce, contains, intersects, separate } from "./intersect.js";
+import { layersCollide } from "./layers.js";
 export class System extends RBush {
 	bodies = []
 	dynamics = []
@@ -40,7 +41,7 @@ export class System extends RBush {
 				for (let i = 0; i < potentials.length; i++) {
 					let bb = potentials[i]
 					if (bb.shape.body === body) continue;
-					if (intersects(body.shape, bb.shape)) {
+					if (layersCollide(body.collisionMask, bb.shape.body.layerMask) && intersects(body.shape, bb.shape)) {
 						let sep = separate(body.shape, bb.shape);
 						if (sep) sepForce(body, bb.shape.body, sep);
 					}

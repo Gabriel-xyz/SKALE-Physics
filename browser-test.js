@@ -12,19 +12,25 @@ document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 const system = new System(mapSize);
 for (let i = 0; i < 10; i++) {
+  let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
   system.create({
     dynamic: false,
     pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
     scale: { x: 1, y: 1 },
-    angle: randomRadian()
+    angle: randomRadian(),
+    layerMask: mask,
+    collisionMask: mask
   })
 }
 for (let i = 0; i < 30; i++) {
+  let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
   system.create({
     dynamic: true,
     pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
     scale: { x: 1, y: 1 },
-    angle: randomRadian()
+    angle: randomRadian(),
+    layerMask: mask,
+    collisionMask: mask
   })
 }
 let staticColor = 'rgb(255,0,0)'
@@ -33,7 +39,7 @@ let sleepingColor = 'rgb(0,0,255)'
 function render() {
   ctx.fillStyle = '#222';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  for(let i=0;i<system.bodies.length;i++){
+  for (let i = 0; i < system.bodies.length; i++) {
     let body = system.bodies[i]
     let color
     if (body.sleeping) color = sleepingColor
@@ -79,8 +85,8 @@ function gameLoop() {
     let body = system.dynamics[i]
     // if(Date.now() - startTime < 3000) body.move(5)
     body.move(1)
-    if (Math.random() < 0.01) body.angle = randomRadian()
-    if (i >= 0) break
+    if (Math.random() < 0.002) body.angle = randomRadian()
+    // if (i >= 0) break
   }
   system.step(dt);
   render();

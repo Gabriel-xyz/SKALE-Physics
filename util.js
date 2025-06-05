@@ -9,7 +9,7 @@ export function rad2deg(radians) {
 	return radians * RAD2DEG;
 }
 export function randomRadian() {
-  return Math.random() * Math.PI * 2;
+	return Math.random() * Math.PI * 2;
 }
 export function distance(bodyA, bodyB) {
 	const xDiff = bodyA.x - bodyB.x;

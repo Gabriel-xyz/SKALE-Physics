@@ -4,23 +4,30 @@ import { randomRadian } from './util.js'
 let mapSize = 1200
 let system = new System(mapSize)
 for (let i = 0; i < 0; i++) {
+	let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
 	system.create({
 		dynamic: false,
 		pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
 		scale: { x: 1, y: 1 },
-		angle: randomRadian()
+		angle: randomRadian(),
+		layerMask: mask,
+		collisionMask: mask
 	})
 }
 for (let i = 0; i < 13000; i++) {
+	let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
 	system.create({
 		dynamic: true,
 		pos: { x: mapSize * Math.random(), y: mapSize * Math.random() },
 		scale: { x: 1, y: 1 },
-		angle: randomRadian()
+		angle: randomRadian(),
+		layerMask: mask,
+		collisionMask: mask
 	})
 }
 let now = performance.now(), previous = now, dt = 0, times = [], lastLog = 0
 let loop = () => {
+	setImmediate(loop)
 	now = performance.now(), dt = (now - previous) / 1000, previous = now
 	for (let i = 0; i < system.dynamics.length; i++) {
 		let body = system.dynamics[i]
@@ -53,6 +60,5 @@ let loop = () => {
 		lastLog = now
 		console.log(n / times.length, times.length)
 	}
-	setImmediate(loop)
 }
 loop()
