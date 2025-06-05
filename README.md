@@ -4,6 +4,7 @@ This library is 3 features away from being complete:
 - Raycasting
 - Circles
 - Collision/Trigger Callbacks
+
 It seems to work perfectly fine if you don't need these features.
 
 SKALE Physics is a 2D "Arcade Physics Engine" (for Games) made as fast as possible for certain types of games, because it has optimized physics not realistic physics. Primarily for topdown simulation games that need as many bodies on screen as possible (Dwarf Fortress, Rimworld). Those type of games do not need certain features, which allowed those features to be removed for speed:
