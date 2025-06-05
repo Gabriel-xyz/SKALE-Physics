@@ -1,46 +1,139 @@
-[Alpha Version]
+SKALE Physics 🚀
+  
+A high-performance 2D Arcade Physics Engine optimized for games, designed for top-down simulation games like Dwarf Fortress or Rimworld. Built for speed, it prioritizes performance over realistic physics, enabling thousands of bodies on screen at 60 FPS, even on older hardware.
 
-This is 20,000 static boxes (red) and 10,000 dynamic boxes (5,000 moving (green) and 5,000 sleeping (blue)) @ 60 fps on a CPU from 2014. You get much more when running on a server (because rendering these is the bottleneck) and modern CPU.
-![Screenshot description](https://raw.githubusercontent.com/Gabriel-xyz/SKALE-Physics/main/screenshot.jpg)
+Table of Contents
 
-This library is 3 features away from being complete:
-- Raycasting
-- Circles
-- Collision/Trigger Callbacks
+Overview
+Features
+Missing Features
+Performance
+Use Cases
+Benchmarks
+Why SKALE Physics?
 
-It seems to work perfectly fine if you don't need these features.
+Overview
+SKALE Physics is a JavaScript-based 2D physics engine tailored for games requiring massive numbers of bodies, such as multiplayer top-down simulation games. It achieves unmatched performance by focusing on arcade-style physics rather than realistic simulations, removing unnecessary features for speed.
+On a 2014 CPU (i5 4690K), it handles:
 
-SKALE Physics is a 2D "Arcade Physics Engine" (for Games) made as fast as possible for certain types of games, because it has optimized physics not realistic physics. Primarily for topdown simulation games that need as many bodies on screen as possible (Dwarf Fortress, Rimworld). Those type of games do not need certain features, which allowed those features to be removed for speed:
-- AABB/Circle collisions only. Faster than SAT or any other option
-- Doesn't care about stacked bodies looking perfect (although they still seem to look okay)
-- No joints or constraints. Simulation games do not often need these
-- No compound colliders
+20,000 static boxes (red) 🟥
+10,000 dynamic boxes (5,000 moving (green) 🟩, 5,000 sleeping (blue) 🟦)
+60 FPS in the browser, with even better performance on servers (rendering is the bottleneck).
 
-What it does have:
-- Fastest JS physics engine currently in existence
-- Layers (Which bodies collide with you) and Collision Layers (Which bodies you collide with)
-- Body Sleeping (optimization)
-- Triggers
-- A version of RBush 10% faster than standard RBush
-- Broadphase Padding (big optimization)
-- Excellent for multiplayer games that need as many players and NPCs as possible
-- You can multithread physics in a multiplayer game by making each map have its own "Physics World" on a separate thread
-- Mass, Bounce, Damping, Velocity, Acceleration, Impulse
-- Body pushing another
-- Body imparting force onto a body it collides with
-- Collide World Bounds (Can't leave bounds of "the world")
-- "Wall Sliding"
-- Data Oriented Design (for speed)
+Features
+SKALE Physics is optimized for speed and includes:
 
-In my tests it outperformed every existing javascript physics engine by far, including box2d3-wasm.
-It outperforms matterjs by far.
-Those libraries are designed for realistic physics simulation. They are not "Arcade Physics" "for Games".
-It outperforms Phaser Arcade Physics by far.
 
-This library can run on server or browser but it runs immensely faster on server because I designed it for my multiplayer game.
 
-This library is kind of like if you wanted 2D RPG movement then one day decided you need some physics too.
+Feature
+Description
 
-Benchmarks:
-- Server: 0 static bodies, 20,000 dynamic bodies (12,000 moving, 8000 only moving if collided with), 62 fps. i5 4690K (2014 CPU)
-- Browser: 20,000 static bodies (static bodies use no CPU), 10,000 dynamic bodies (6000 moving, 4000 only if collided with), 60 fps.
+
+
+High Performance
+Fastest JavaScript physics engine, outperforming Box2D WASM, Matter.js, and Phaser Arcade Physics.
+
+
+Collision Detection
+AABB/Circle collisions only for maximum speed.
+
+
+Layers
+Define which bodies collide with each other using collision and layer masks.
+
+
+Body Sleeping
+Optimizes performance by deactivating static bodies.
+
+
+Triggers
+Support for trigger-based interactions.
+
+
+Optimized RBush
+Custom RBush implementation, 10% faster than standard.
+
+
+Broadphase Padding
+Significant optimization for collision detection.
+
+
+Physics Properties
+Mass, bounce, damping, velocity, acceleration, impulse.
+
+
+World Bounds
+Bodies can't leave the defined world boundaries.
+
+
+Wall Sliding
+Smooth sliding along walls.
+
+
+Data-Oriented Design
+Optimized for speed with minimal overhead.
+
+
+Multithreading
+Each map can have its own "Physics World" on a separate thread for multiplayer games.
+
+
+Body Interactions
+Bodies can push or impart forces on each other.
+
+
+Missing Features
+The library is in alpha and lacks three features for completion:
+
+Raycasting
+Circle Colliders
+Collision/Trigger Callbacks
+
+It works perfectly for games that don’t require these features.
+Performance
+SKALE Physics is designed for:
+
+Top-down simulation games needing thousands of bodies (e.g., Dwarf Fortress, Rimworld).
+Multiplayer games requiring high NPC/player counts.
+Browser or server environments, with superior performance on servers due to rendering bottlenecks.
+
+It sacrifices features like joints, constraints, and compound colliders for speed, as these are rarely needed in arcade-style simulation games.
+Use Cases
+
+Multiplayer Games: Supports massive player/NPC counts with multithreaded physics worlds.
+Top-Down RPGs: Ideal for games needing simple physics alongside 2D movement.
+Simulation Games: Optimized for large-scale simulations with many dynamic bodies.
+
+Benchmarks
+
+
+
+Environment
+Static Bodies
+Dynamic Bodies
+FPS
+Hardware
+
+
+
+Server
+0
+20,000 (12,000 moving, 8,000 sleeping)
+62
+i5 4690K (2014)
+
+
+Browser
+20,000
+10,000 (6,000 moving, 4,000 sleeping)
+60
+i5 4690K (2014)
+
+
+Why SKALE Physics?
+
+Outperforms competitors: Beats Box2D WASM, Matter.js, and Phaser Arcade Physics in speed.
+Arcade-focused: Tailored for games, not realistic physics simulations.
+Scalable: Handles thousands of bodies, perfect for large-scale or multiplayer games.
+Lightweight: Optimized for both browser and server, with server-side performance excelling.
+
