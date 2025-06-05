@@ -1,6 +1,6 @@
 {
   "name": "skale-physics",
-  "version": "1.0.0",
+  "version": "0.5.50",
   "description": "",
   "main": "index.js",
   "type": "module",
