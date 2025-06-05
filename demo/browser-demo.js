@@ -1,7 +1,7 @@
-import './index.js'
-import { System } from './system.js';
-import { randomRadian } from './util.js';
-import { Box } from './shape.js';
+import '../index.js'
+import { System } from '../system.js';
+import { randomRadian } from '../util.js';
+import { Box } from '../shape.js';
 let startTime = Date.now();
 const canvas = document.createElement('canvas');
 canvas.width = screen.height;

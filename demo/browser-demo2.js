@@ -1,11 +1,10 @@
-import './index.js'
-import { System } from './system.js';
-import { randomRadian } from './util.js';
-import { Box } from './shape.js';
+import '../index.js'
+import { System } from '../system.js';
+import { randomRadian } from '../util.js';
+import { Box } from '../shape.js';
 const zombieImg = new Image();
 zombieImg.src = 'zombie.png';
 zombieImg.onload = () => {
-	console.log('Zombie image loaded');
 	gameLoop(); // Start game loop only after image loads
 };
 let startTime = Date.now();

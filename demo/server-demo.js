@@ -1,6 +1,6 @@
-import './index.js'
-import { System } from './system.js'
-import { randomRadian } from './util.js'
+import '../index.js'
+import { System } from '../system.js'
+import { randomRadian } from '../util.js'
 let mapSize = 1200
 let system = new System(mapSize)
 for (let i = 0; i < 100000; i++) {
