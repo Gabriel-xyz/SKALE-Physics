@@ -3,7 +3,7 @@ import { PADDING } from "./const.js";
 import RBush from "./external/rbush-optimized.js";
 import { sepForce, contains, intersects, separate } from "./intersect.js";
 import { layersCollide } from "./layers.js";
-export class System extends RBush {
+export class Skale extends RBush {
 	bodies = []
 	dynamics = []
 	statics = []

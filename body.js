@@ -1,6 +1,5 @@
 import { ALL_LAYERS } from "./layers.js"
 import { Box } from "./shape.js"
-// IMPORTANT: turns out Bodies dont have multiple Shapes (compound colliders), instead GameObjects have multiple Bodies (compound bodies) each with one Shape. think about it, if Bodies have multiple Shapes then those Shapes are stuck in formation, they cant move physically independently of each other because only bodies physically move, for example some spider monster with procedural physically moving legs, Bodies move physically not Shapes. so the GameObject has multiple Bodies and GameObject will have its own move()/etc functions that call the same function on all of its bodies at once (aka gameobject.move() calls body.move() for each body) that move all its bodies at once, and other functions to move specific bodies in its compound body, using physics, or setting its position depending on context, both for example for spider legs.
 export class Body {
 	// TODO i noticed that if you set any of these properties directly it will not awaken the body but maybe you should only ever use the setters/functions anyway idk
 	vel = { x: 0, y: 0 }
@@ -12,7 +11,6 @@ export class Body {
 		this.system = config.system
 		this.dynamic = config.dynamic ?? true
 		this.shape = config.shape ?? new Box(config, this)
-		// TODO make active flag actually do something
 		this.active = config.active ?? true
 		this.angle = config.angle ?? 0 // exists solely for the move() function, has nothing to do with rotation
 		this.damping = config.damping ?? 0.7
@@ -20,7 +18,7 @@ export class Body {
 		this.mass = config.mass ?? 1
 		this.layerMask = config.layerMask ?? this.layerMask
 		this.collisionMask = config.collisionMask ?? this.collisionMask
-		this.shapeChangedTime = 0 // TODO this might be better on the shape instead
+		this.shapeChangedTime = 0 // TODO this might be better on the shape instead (or not, because compound colliders? idk)
 	}
 	sleep() {
 		if (this.sleeping) return

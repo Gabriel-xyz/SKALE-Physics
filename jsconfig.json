@@ -1,0 +1,11 @@
+{
+	"exclude": [
+		"node_modules",
+		"dist"
+	],
+	"compilerOptions": {
+		"target":"esnext",
+		"module": "esnext",
+		"checkJs": true
+	}
+}
