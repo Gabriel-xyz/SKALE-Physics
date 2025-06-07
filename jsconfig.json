@@ -3,9 +3,12 @@
 		"node_modules",
 		"dist"
 	],
+	"include": ["./**/*"],
 	"compilerOptions": {
 		"target":"esnext",
 		"module": "esnext",
-		"checkJs": true
+		"checkJs": true,
+		"allowJs": true,
+		"noEmit": true
 	}
 }
