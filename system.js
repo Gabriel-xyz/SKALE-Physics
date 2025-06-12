@@ -2,7 +2,6 @@ import { Body } from "./body.js";
 import { PADDING } from "./const.js";
 import RBush from "./external/rbush-optimized.js";
 import { sepForce, contains, intersects, separate } from "./intersect.js";
-import { layersCollide } from "./layers.js";
 export class Skale extends RBush {
 	bodies = []
 	dynamics = []
@@ -44,7 +43,7 @@ export class Skale extends RBush {
 				for (let i = 0; i < potentials.length; i++) {
 					let shape2 = potentials[i].shape
 					if (shape2.body === body) continue;
-					if (layersCollide(body.collisionMask, shape2.body.layerMask) && intersects(shape, shape2)) {
+					if ((body.collisionMask & shape2.body.layerMask) && intersects(shape, shape2)) {
 						let sep = separate(shape, shape2);
 						if (sep) sepForce(body, shape2.body, sep);
 					}

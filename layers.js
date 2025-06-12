@@ -7,7 +7,6 @@ export const LAYER3 = 1 << 2
 // body.collisionMask = ALL_LAYERS
 
 // if collisionMask of one body shares layer with layerMask of another body, then the first body can collide with the second body
-export const layersCollide = (collisionMask, layerMask) => collisionMask & layerMask
 export function setLayerMask(body, layers = []) {
 	body.layerMask = 0;
 	for (let layer of layers) {
