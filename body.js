@@ -1,31 +1,28 @@
 import { ALL_LAYERS } from "./layers.js"
 import { Box } from "./shape.js"
 export class Body {
-	// TODO i noticed that if you set any of these properties directly it will not awaken the body but maybe you should only ever use the setters/functions anyway idk
-	vel = { x: 0, y: 0 }
-	accel = { x: 0, y: 0 }
-	impulse = { x: 0, y: 0 }
-	layerMask = ALL_LAYERS // what bodies collide with you
-	collisionMask = ALL_LAYERS // what bodies you collide with
 	constructor(config) {
 		this.system = config.system
-		this.dynamic = config.dynamic ?? true
 		this.shape = config.shape ?? new Box(config, this)
-		this.active = config.active ?? true
+		// TODO i noticed that if you set any of these properties directly it will not awaken the body but maybe you should only ever use the setters/functions anyway idk
+		this.vel = { x: 0, y: 0 }
+		this.accel = { x: 0, y: 0 }
+		this.impulse = { x: 0, y: 0 }
 		this.angle = config.angle ?? 0 // exists solely for the move() function, has nothing to do with rotation
 		this.damping = config.damping ?? 0.5
 		this.bounce = config.bounce ?? 0.8
 		this.mass = config.mass ?? 1
-		this.layerMask = config.layerMask ?? this.layerMask
-		this.collisionMask = config.collisionMask ?? this.collisionMask
 		this.shapeChangedTime = 0 // TODO this might be better on the shape instead (or not, because compound colliders? idk)
+		this.layerMask = config.layerMask ?? ALL_LAYERS
+		this.collisionMask = config.collisionMask ?? ALL_LAYERS
+		this.dynamic = config.dynamic ?? true
+		this.active = config.active ?? true
 	}
 	sleep(knownIndex) {
 		if (this.sleeping) return
 		this.sleeping = true
 		let a = this.system.awakes
-		let i = knownIndex ?? a.indexOf(this)
-		a[i] = a.pop()
+		a[knownIndex ?? a.indexOf(this)] = a.pop()
 	}
 	awake() {
 		if (!this.sleeping) return

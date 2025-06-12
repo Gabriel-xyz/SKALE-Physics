@@ -7,7 +7,7 @@ class Shape {
 }
 export class Box extends Shape {
 	constructor(config, body) {
-		super(config.trigger)
+		super(config.trigger ?? false)
 		this.body = body
 		this.setPos(config.pos.x, config.pos.y)
 		this.setScale(config.scale.x, config.scale.y)
