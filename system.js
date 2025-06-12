@@ -16,6 +16,7 @@ export class Skale extends RBush {
 	step(dt) {
 		dt = Math.min(dt, 1 / 10) // cap dt to prevent tunneling and far distance teleporting from one slow frame
 		let now = performance.now()
+		let restThreshold = this.restThreshold
 		for (let i = 0; i < this.awakes.length; i++) {
 			let body = this.awakes[i]
 			if (!body.active || body.sleeping) continue;
@@ -29,8 +30,8 @@ export class Skale extends RBush {
 			let damp = Math.exp(-body.damping * dt)
 			body.vel.x *= damp;
 			body.vel.y *= damp;
-			if (Math.abs(body.vel.x) < this.restThreshold * dt) body.vel.x = 0;
-			if (Math.abs(body.vel.y) < this.restThreshold * dt) body.vel.y = 0;
+			if (Math.abs(body.vel.x) < restThreshold * dt) body.vel.x = 0;
+			if (Math.abs(body.vel.y) < restThreshold * dt) body.vel.y = 0;
 			body.accel.x = 0;
 			body.accel.y = 0;
 			body.impulse.x = 0;
@@ -61,20 +62,21 @@ export class Skale extends RBush {
 		}
 	}
 	collideWorldBounds(body) {
+		let mapSize = this.mapSize
 		if (body.shape.minX < 0) {
 			body.shape.setPos(0, body.shape.minY);
 			body.vel.x = -body.vel.x * body.bounce
 		}
-		if (body.shape.maxX > this.mapSize) {
-			body.shape.setPos(body.shape.minX - (body.shape.maxX - this.mapSize), body.shape.minY);
+		if (body.shape.maxX > mapSize) {
+			body.shape.setPos(body.shape.minX - (body.shape.maxX - mapSize), body.shape.minY);
 			body.vel.x = -body.vel.x * body.bounce
 		}
 		if (body.shape.minY < 0) {
 			body.shape.setPos(body.shape.minX, 0);
 			body.vel.y = -body.vel.y * body.bounce
 		}
-		if (body.shape.maxY > this.mapSize) {
-			body.shape.setPos(body.shape.minX, body.shape.minY - (body.shape.maxY - this.mapSize));
+		if (body.shape.maxY > mapSize) {
+			body.shape.setPos(body.shape.minX, body.shape.minY - (body.shape.maxY - mapSize));
 			body.vel.y = -body.vel.y * body.bounce
 		}
 	}

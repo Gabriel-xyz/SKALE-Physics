@@ -1,5 +1,5 @@
 import '../index.js'
-import { System } from '../system.js';
+import { Skale } from '../system.js';
 import { randomRadian } from '../util.js';
 import { Box } from '../shape.js';
 const zombieImg = new Image();
@@ -15,7 +15,7 @@ let mapSize = 50
 let zoom = canvas.width / mapSize
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
-const system = new System(mapSize);
+const system = new Skale(mapSize);
 for (let i = 0; i < 0; i++) {
 	// let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
 	system.create({
