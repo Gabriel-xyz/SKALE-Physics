@@ -19,65 +19,70 @@ export class Skale extends RBush {
 		let restThreshold = this.restThreshold
 		for (let i = 0; i < this.awakes.length; i++) {
 			let body = this.awakes[i]
-			if (!body.active || body.sleeping) continue;
-			body.vel.x += body.accel.x / body.mass * dt;
-			body.vel.y += body.accel.y / body.mass * dt;
-			body.vel.x += body.impulse.x / body.mass;
-			body.vel.y += body.impulse.y / body.mass;
-			let addX = body.vel.x * dt;
-			let addY = body.vel.y * dt;
-			if (addX || addY) body.shape.setPos(body.shape.minX + addX, body.shape.minY + addY);
-			let damp = Math.exp(-body.damping * dt)
-			body.vel.x *= damp;
-			body.vel.y *= damp;
-			if (Math.abs(body.vel.x) < restThreshold * dt) body.vel.x = 0;
-			if (Math.abs(body.vel.y) < restThreshold * dt) body.vel.y = 0;
-			body.accel.x = 0;
-			body.accel.y = 0;
-			body.impulse.x = 0;
-			body.impulse.y = 0;
-			if (body.shape.shapeChanged) {
+			// im curious if removing inactive bodies from the awakes array entirely would result in a speedup. supposedly it will according to some youtube guy
+			if (!body.active) continue;
+			let { vel, accel, impulse, shape, mass, damping } = body
+			vel.x += accel.x / mass * dt;
+			vel.y += accel.y / mass * dt;
+			vel.x += impulse.x / mass;
+			vel.y += impulse.y / mass;
+			let addX = vel.x * dt;
+			let addY = vel.y * dt;
+			if (addX || addY) shape.setPos(shape.minX + addX, shape.minY + addY);
+			let damp = Math.exp(-damping * dt)
+			vel.x *= damp;
+			vel.y *= damp;
+			if (Math.abs(vel.x) < restThreshold * dt) vel.x = 0;
+			if (Math.abs(vel.y) < restThreshold * dt) vel.y = 0;
+			accel.x = 0;
+			accel.y = 0;
+			impulse.x = 0;
+			impulse.y = 0;
+			if (shape.shapeChanged) {
 				body.shapeChangedTime = now
-				let potentials = this.search(body.shape);
+				let potentials = this.search(shape);
 				for (let i = 0; i < potentials.length; i++) {
-					let bb = potentials[i]
-					if (bb.shape.body === body) continue;
-					if (layersCollide(body.collisionMask, bb.shape.body.layerMask) && intersects(body.shape, bb.shape)) {
-						let sep = separate(body.shape, bb.shape);
-						if (sep) sepForce(body, bb.shape.body, sep);
+					let shape2 = potentials[i].shape
+					if (shape2.body === body) continue;
+					if (layersCollide(body.collisionMask, shape2.body.layerMask) && intersects(shape, shape2)) {
+						let sep = separate(shape, shape2);
+						if (sep) sepForce(body, shape2.body, sep);
 					}
 				}
 				this.collideWorldBounds(body)
-				if (!PADDING || !contains(body.shape.bb, body.shape)) {
-					this.remove(body.shape.bb);
-					body.shape.refreshBB(body.dynamic);
-					this.insert(body.shape.bb);
+				let bb = shape.bb
+				if (!PADDING || !contains(bb, shape)) {
+					this.remove(bb);
+					shape.refreshBB(body.dynamic);
+					this.insert(bb);
 				}
-				body.shape.shapeChanged = false;
+				shape.shapeChanged = false;
 			}
 			if (now - body.shapeChangedTime > 200) {
 				if (!body.sleeping) i--
-				body.sleep()
+				body.sleep(i)
 			}
 		}
 	}
 	collideWorldBounds(body) {
 		let mapSize = this.mapSize
-		if (body.shape.minX < 0) {
-			body.shape.setPos(0, body.shape.minY);
-			body.vel.x = -body.vel.x * body.bounce
+		let { vel, shape, bounce } = body
+		let { minX, maxX, minY, maxY } = shape
+		if (minX < 0) {
+			shape.setPos(0, minY);
+			vel.x = -vel.x * bounce
 		}
-		if (body.shape.maxX > mapSize) {
-			body.shape.setPos(body.shape.minX - (body.shape.maxX - mapSize), body.shape.minY);
-			body.vel.x = -body.vel.x * body.bounce
+		if (maxX > mapSize) {
+			shape.setPos(minX - (maxX - mapSize), minY);
+			vel.x = -vel.x * bounce
 		}
-		if (body.shape.minY < 0) {
-			body.shape.setPos(body.shape.minX, 0);
-			body.vel.y = -body.vel.y * body.bounce
+		if (minY < 0) {
+			shape.setPos(minX, 0);
+			vel.y = -vel.y * bounce
 		}
-		if (body.shape.maxY > mapSize) {
-			body.shape.setPos(body.shape.minX, body.shape.minY - (body.shape.maxY - mapSize));
-			body.vel.y = -body.vel.y * body.bounce
+		if (maxY > mapSize) {
+			shape.setPos(minX, minY - (maxY - mapSize));
+			vel.y = -vel.y * bounce
 		}
 	}
 	create(config) {

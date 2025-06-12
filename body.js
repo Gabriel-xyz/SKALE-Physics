@@ -13,17 +13,19 @@ export class Body {
 		this.shape = config.shape ?? new Box(config, this)
 		this.active = config.active ?? true
 		this.angle = config.angle ?? 0 // exists solely for the move() function, has nothing to do with rotation
-		this.damping = config.damping ?? 0.7
-		this.bounce = config.bounce ?? 0.7
+		this.damping = config.damping ?? 0.5
+		this.bounce = config.bounce ?? 0.8
 		this.mass = config.mass ?? 1
 		this.layerMask = config.layerMask ?? this.layerMask
 		this.collisionMask = config.collisionMask ?? this.collisionMask
 		this.shapeChangedTime = 0 // TODO this might be better on the shape instead (or not, because compound colliders? idk)
 	}
-	sleep() {
+	sleep(knownIndex) {
 		if (this.sleeping) return
 		this.sleeping = true
-		this.system.awakes.splice(this.system.awakes.indexOf(this), 1);
+		let a = this.system.awakes
+		let i = knownIndex ?? a.indexOf(this)
+		a[i] = a.pop()
 	}
 	awake() {
 		if (!this.sleeping) return
