@@ -40,8 +40,8 @@ export class Skale extends RBush {
 			if (shape.shapeChanged) {
 				body.shapeChangedTime = now
 				let potentials = this.search(shape);
-				for (let i = 0; i < potentials.length; i++) {
-					let shape2 = potentials[i].shape
+				for (let i2 = 0; i2 < potentials.length; i2++) {
+					let shape2 = potentials[i2].shape
 					if (shape2.body === body) continue;
 					if ((body.collisionMask & shape2.body.layerMask) && intersects(shape, shape2)) {
 						let sep = separate(shape, shape2);
@@ -57,7 +57,7 @@ export class Skale extends RBush {
 				}
 				shape.shapeChanged = false;
 			}
-			if (now - body.shapeChangedTime > 200) {
+			if (now - body.shapeChangedTime > 100) {
 				if (!body.sleeping) i--
 				body.sleep(i)
 			}
