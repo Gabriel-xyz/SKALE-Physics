@@ -25,7 +25,7 @@ for (let i = 0; i < 18000; i++) {
 		collisionMask: mask
 	})
 }
-let now = performance.now(), previous = now, dt = 0, times = [], lastLog = 0
+let now = performance.now(), previous = now, dt = 0, times = [], lastLog = 0, tick = 0
 let loop = () => {
 	setImmediate(loop)
 	now = performance.now(), dt = (now - previous) / 1000, previous = now
@@ -35,7 +35,7 @@ let loop = () => {
 		if (Math.random() < 0.002) body.angle = randomRadian()
 		if (i >= 6000) break
 	}
-	system.step(dt)
+	system.step(dt, tick)
 
 	// let speeds = []
 	// for (let i = 0; i < system.dynamics.length; i++) {
@@ -50,6 +50,7 @@ let loop = () => {
 	// avgSpeed /= speeds.length
 	// if (Math.random() < 0.01) console.log(avgSpeed)
 
+	tick++
 	times.push(1 / dt)
 	if (times.length > 500) times.shift()
 	let n = 0

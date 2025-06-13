@@ -78,7 +78,7 @@ function render() {
     ctx.restore();
   }
 }
-let previous = performance.now(), times = [], lastLog = 0, dt = 1 / 60
+let previous = performance.now(), times = [], lastLog = 0, dt = 1 / 60,tick=0
 function gameLoop() {
   requestAnimationFrame(gameLoop);
   for (let i = 0; i < system.dynamics.length; i++) {
@@ -88,8 +88,9 @@ function gameLoop() {
     if (Math.random() < 0.003) body.angle = randomRadian()
     if (i >= 100) break
   }
-  system.step(dt);
+  system.step(dt,tick);
   render();
+  tick++
 
   // let speeds = []
   // for (let i = 0; i < system.dynamics.length; i++) {
