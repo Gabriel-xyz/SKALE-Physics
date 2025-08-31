@@ -7,13 +7,13 @@ export class Skale extends RBush {
 	dynamics = []
 	statics = []
 	awakes = []
-	restThreshold = 0.25
+	restThreshold = 0.3
 	constructor(mapSize = 500, maxEntries = 11, minEntries = 2) {
 		super(maxEntries, minEntries)
 		this.mapSize = mapSize
 	}
-	step(dt) {
-		dt = Math.min(dt, 1 / 10) // cap dt to prevent tunneling and far distance teleporting from one slow frame
+	step(dt, tick) {
+		dt = Math.min(dt, 1 / 20) // cap dt to prevent tunneling and far distance teleporting from one slow frame
 		let now = performance.now()
 		let restThreshold = this.restThreshold
 		for (let i = 0; i < this.awakes.length; i++) {
@@ -39,7 +39,7 @@ export class Skale extends RBush {
 			impulse.y = 0;
 			if (shape.shapeChanged) {
 				body.shapeChangedTime = now
-				let potentials = this.search(shape) // this is literally 95% of all cpu usage per tick. i tried doing a bigger search then if nothing was anywhere close i would skip using search() for 3 frames but that made it slower because a bigger search area takes longer, so much so that it was overall slower even if you skip 3 frames when you dont find anything
+				let potentials = this.search(shape) // this is literally 95% of all cpu usage per tick. i tried doing a bigger search then if nothing was anywhere close i would skip using search() for 3 ticks but that made it slower because a bigger search area takes longer, so much so that it was overall slower even if you skip 3 frames when you dont find anything
 				for (let i2 = 0; i2 < potentials.length; i2++) {
 					let shape2 = potentials[i2].shape
 					if (shape2.body === body) continue;
@@ -57,7 +57,7 @@ export class Skale extends RBush {
 				}
 				shape.shapeChanged = false;
 			}
-			if (now - body.shapeChangedTime > 50) {
+			if (now - body.shapeChangedTime > 20) {
 				if (!body.sleeping) i--
 				body.sleep(i)
 			}

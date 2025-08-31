@@ -3,7 +3,7 @@ import { Skale } from '../system.js'
 import { randomRadian } from '../util.js'
 let mapSize = 1200
 let system = new Skale(mapSize)
-for (let i = 0; i < 100000; i++) {
+for (let i = 0; i < 0; i++) {
 	let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
 	system.create({
 		dynamic: false,
@@ -14,7 +14,7 @@ for (let i = 0; i < 100000; i++) {
 		collisionMask: mask
 	})
 }
-for (let i = 0; i < 18000; i++) {
+for (let i = 0; i < 20000; i++) {
 	let mask = Math.random() < 0.5 ? 1 << 0 : 1 << 1
 	system.create({
 		dynamic: true,
@@ -33,7 +33,7 @@ let loop = () => {
 		let body = system.dynamics[i]
 		body.move(1)
 		if (Math.random() < 0.002) body.angle = randomRadian()
-		if (i >= 6000) break
+		if (i >= 10000) break
 	}
 	system.step(dt, tick)
 

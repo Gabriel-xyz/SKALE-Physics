@@ -1,3 +1,5 @@
+BUG: A new bug has come seemingly out of nowhere, even though months ago I had it working perfectly, but now I run it and there's a bug even though I haven't changed anything. The bug seems to be, from what I'm observing but haven't extensively checked yet, that an awake body can be pushed over a sleeping body, thus intersecting it, this is not desired, it seems to be an awake body pushes the other awake body causing it to intersect the sleeping body. I'm pretty sure this should make the sleeping body wake up, maybe that's the best way to handle it, but I haven't looked at this code in so long I don't remember.
+
 # SKALE Physics 🚀
 
 ![Alpha Version](https://img.shields.io/badge/Version-Alpha-blue) ![License](https://img.shields.io/badge/License-MIT-green) ![Language](https://img.shields.io/badge/Language-JavaScript-yellow)

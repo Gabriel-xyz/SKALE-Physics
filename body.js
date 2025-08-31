@@ -1,6 +1,12 @@
 import { ALL_LAYERS } from "./layers.js"
 import { Box } from "./shape.js"
 export class Body {
+	// TODO turns out you can use object destructuring in the constructor like this and it would probably look better: class Person {
+//     constructor({ name = "Unknown", age = 0 } = {}) {
+//         this.name = name;
+//         this.age = age;
+//     }
+// }
 	constructor(config) {
 		this.system = config.system
 		this.shape = config.shape ?? new Box(config, this)
@@ -9,8 +15,8 @@ export class Body {
 		this.accel = { x: 0, y: 0 }
 		this.impulse = { x: 0, y: 0 }
 		this.angle = config.angle ?? 0 // exists solely for the move() function, has nothing to do with rotation
-		this.damping = config.damping ?? 0.5
-		this.bounce = config.bounce ?? 0.8
+		this.damping = config.damping ?? 1
+		this.bounce = config.bounce ?? 1
 		this.mass = config.mass ?? 1
 		this.shapeChangedTime = 0 // TODO this might be better on the shape instead (or not, because compound colliders? idk)
 		this.layerMask = config.layerMask ?? ALL_LAYERS
