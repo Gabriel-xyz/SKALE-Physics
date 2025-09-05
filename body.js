@@ -27,13 +27,13 @@ export class Body {
 	sleep(knownIndex) {
 		if (this.sleeping) return
 		this.sleeping = true
-		let a = this.system.awakes
-		a[knownIndex ?? a.indexOf(this)] = a.pop()
+		// let a = this.system.awakes
+		// a[knownIndex ?? a.indexOf(this)] = a.pop()
 	}
 	awake() {
 		if (!this.sleeping) return
 		this.sleeping = false
-		this.system.awakes.push(this)
+		// this.system.awakes.push(this)
 	}
 	get x() {
 		return this.shape.minX;

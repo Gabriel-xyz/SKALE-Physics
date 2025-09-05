@@ -16,10 +16,9 @@ export class Skale extends RBush {
 		dt = Math.min(dt, 1 / 20) // cap dt to prevent tunneling and far distance teleporting from one slow frame
 		let now = performance.now()
 		let restThreshold = this.restThreshold
-		for (let i = 0; i < this.awakes.length; i++) {
-			let body = this.awakes[i]
-			// im curious if removing inactive bodies from the awakes array entirely would result in a speedup. supposedly it will according to some youtube guy
-			if (!body.active) continue;
+		for (let i = 0; i < this.dynamics.length; i++) {
+			let body = this.dynamics[i]
+			if (body.sleeping || !body.active) continue;
 			let { vel, accel, impulse, shape, mass, damping } = body
 			vel.x += accel.x / mass * dt;
 			vel.y += accel.y / mass * dt;
